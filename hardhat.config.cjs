@@ -26,15 +26,25 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
-    mumbai: {
-      url: process.env.MUMBAI_RPC_URL || "https://rpc-mumbai.maticvigil.com",
+    amoy: {
+      url: process.env.AMOY_RPC_URL || "https://rpc-amoy.polygon.technology",
       accounts,
-      chainId: 80001,
+      chainId: 80002,
+      gasPrice: 30000000000,
+      timeout: 60000,
+    },
+    mumbai: {
+      url: process.env.MUMBAI_RPC_URL || "https://rpc-amoy.polygon.technology",
+      accounts,
+      chainId: 80002,
+      gasPrice: 30000000000,
+      timeout: 60000,
     },
     polygon: {
       url: process.env.POLYGON_RPC_URL || "https://polygon-rpc.com",
       accounts,
       chainId: 137,
+      gasPrice: 50000000000,
     },
   },
   gasReporter: {
@@ -44,6 +54,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       polygon: process.env.POLYGONSCAN_API_KEY || "",
+      polygonAmoy: process.env.POLYGONSCAN_API_KEY || "",
       polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
     },
   },

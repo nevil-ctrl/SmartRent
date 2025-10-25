@@ -12,7 +12,7 @@ export const WalletButton: React.FC = () => {
     connect,
     disconnect,
     switchToPolygon,
-    switchToMumbai,
+    switchToAmoy,
     chainId
   } = useWeb3();
 
@@ -22,8 +22,10 @@ export const WalletButton: React.FC = () => {
     switch (chainId) {
       case 137:
         return 'Polygon';
+      case 80002:
+        return 'Amoy';
       case 80001:
-        return 'Mumbai';
+        return 'Mumbai (closed)';
       case 1337:
         return 'Local';
       case 31337:
@@ -33,7 +35,7 @@ export const WalletButton: React.FC = () => {
     }
   };
 
-  const isCorrectNetwork = chainId === 137 || chainId === 80001;
+  const isCorrectNetwork = chainId === 137 || chainId === 80002;
 
   // dropdown state
   const [open, setOpen] = useState(false);
@@ -111,13 +113,13 @@ export const WalletButton: React.FC = () => {
         <div className="wallet-menu-divider" />
 
         <button
-          className={`wallet-menu-item ${chainId === 80001 ? 'active' : ''}`}
+          className={`wallet-menu-item ${chainId === 80002 ? 'active' : ''}`}
           onClick={() => {
-            switchToMumbai();
+            switchToAmoy();
             setOpen(false);
           }}
         >
-          Mumbai
+          Amoy Testnet
         </button>
 
         <button

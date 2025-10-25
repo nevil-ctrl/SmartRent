@@ -28,6 +28,7 @@ import { useWeb3 } from './hooks/useWeb3';
 import { useContracts } from './hooks/useContracts';
 import { BrowseListingsPage } from './pages/BrowseListingsPage';
 import { MyListingsPage } from './pages/MyListingsPage';
+import { ReputationPage } from './pages/ReputationPage';
 
 // Mock data for demonstration
 const mockListings = [
@@ -286,19 +287,19 @@ const HomePage: React.FC = () => {
           <div className="grid grid-cols-4">
             <div className="card stats-card">
               <div className="stats-value primary">{stats.totalListings}</div>
-              <div className="stats-label">Total Listings</div>
+              <div className="stats-label">Active Listings</div>
             </div>
             <div className="card stats-card">
               <div className="stats-value success">{stats.totalRentals}</div>
-              <div className="stats-label">Completed Rentals</div>
+              <div className="stats-label">Total Rentals</div>
             </div>
             <div className="card stats-card">
               <div className="stats-value warning">{stats.totalDisputes}</div>
-              <div className="stats-label">Disputes Resolved</div>
+              <div className="stats-label">Total Disputes</div>
             </div>
             <div className="card stats-card">
               <div className="stats-value primary">{stats.totalVolume.toFixed(2)}</div>
-              <div className="stats-label">Total Volume (MATIC)</div>
+              <div className="stats-label">Volume (MATIC)</div>
             </div>
           </div>
         </div>
@@ -698,7 +699,7 @@ const App: React.FC = () => {
           <Route path="/my-listings" element={<MyListingsPage />} />
           <Route path="/rentals" element={<PlaceholderPage title="My Rentals" />} />
           <Route path="/disputes" element={<PlaceholderPage title="Disputes" />} />
-          <Route path="/reputation" element={<PlaceholderPage title="Reputation" />} />
+          <Route path="/reputation" element={<ReputationPage />} />
         </Routes>
       </main>
       <Footer />
