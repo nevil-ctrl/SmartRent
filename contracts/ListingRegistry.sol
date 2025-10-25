@@ -93,6 +93,7 @@ contract ListingRegistry is AccessControl, ReentrancyGuard {
 
     /**
      * @dev Create a new property listing
+     * @param landlord Address of the landlord
      * @param title Property title
      * @param description Property description
      * @param pricePerDay Daily rental price in wei
@@ -100,12 +101,14 @@ contract ListingRegistry is AccessControl, ReentrancyGuard {
      * @param ipfsHash IPFS hash containing property images and metadata
      */
     function createListing(
+        address landlord,
         string memory title,
         string memory description,
         uint256 pricePerDay,
         uint256 deposit,
         string memory ipfsHash
     ) external nonReentrant validIpfsHash(ipfsHash) {
+        require(landlord != address(0), "Invalid landlord address");
         require(pricePerDay > 0, "Price must be greater than 0");
         require(deposit > 0, "Deposit must be greater than 0");
         require(bytes(title).length > 0, "Title cannot be empty");
@@ -115,7 +118,7 @@ contract ListingRegistry is AccessControl, ReentrancyGuard {
 
         PropertyListing memory newListing = PropertyListing({
             listingId: listingId,
-            landlord: msg.sender,
+            landlord: landlord,
             title: title,
             description: description,
             pricePerDay: pricePerDay,
@@ -127,10 +130,10 @@ contract ListingRegistry is AccessControl, ReentrancyGuard {
         });
 
         listings[listingId] = newListing;
-        landlordListings[msg.sender].push(listingId);
+        landlordListings[landlord].push(listingId);
         usedIpfsHashes[ipfsHash] = true;
 
-        emit ListingCreated(listingId, msg.sender, title, pricePerDay, deposit, ipfsHash);
+        emit ListingCreated(listingId, landlord, title, pricePerDay, deposit, ipfsHash);
     }
 
     /**

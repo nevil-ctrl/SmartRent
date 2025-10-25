@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Calendar, DollarSign, Shield, Eye } from 'lucide-react';
+import { useListingImage } from '../hooks/useListingImage';
 
 interface PropertyListing {
   listingId: number;
@@ -25,8 +26,10 @@ export const ListingCard: React.FC<ListingCardProps> = ({
   listing,
   onViewDetails,
   onRent,
-  imageUrl
+  imageUrl: providedImageUrl
 }) => {
+  const { imageUrl: fetchedImageUrl, isLoading } = useListingImage(listing.ipfsHash);
+  const imageUrl = providedImageUrl || fetchedImageUrl;
   const formatPrice = (price: string) => {
     const numPrice = parseFloat(price);
     return `${numPrice.toFixed(2)} MATIC`;
@@ -45,9 +48,23 @@ export const ListingCard: React.FC<ListingCardProps> = ({
     <article className="listing-card">
       {/* Property Image */}
       <div className="listing-image">
-        {imageUrl ? (
-          <img src={imageUrl} alt={listing.title} />
-        ) : (
+        {isLoading ? (
+          <div className="listing-image-placeholder">
+            <div className="spinner" style={{ margin: 'auto' }} />
+          </div>
+        ) : imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt={listing.title}
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              (e.target as HTMLImageElement).style.display = 'none';
+              const placeholder = (e.target as HTMLElement).nextElementSibling;
+              if (placeholder) (placeholder as HTMLElement).style.display = 'flex';
+            }}
+          />
+        ) : null}
+        {!isLoading && !imageUrl && (
           <div className="listing-image-placeholder">
             <Eye style={{ width: '48px', height: '48px' }} />
           </div>

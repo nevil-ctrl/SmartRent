@@ -105,10 +105,22 @@ contract SmartRent is AccessControl, ReentrancyGuard, Pausable {
         uint256 deposit,
         string memory ipfsHash
     ) external whenNotPaused {
-        listingRegistry.createListing(title, description, pricePerDay, deposit, ipfsHash);
+        listingRegistry.createListing(msg.sender, title, description, pricePerDay, deposit, ipfsHash);
         totalListings++;
         _updateStatistics();
+        
+        emit ListingCreated(totalListings - 1, msg.sender, title, pricePerDay, deposit, ipfsHash);
     }
+    
+    // Event for listing creation
+    event ListingCreated(
+        uint256 indexed listingId,
+        address indexed landlord,
+        string title,
+        uint256 pricePerDay,
+        uint256 deposit,
+        string ipfsHash
+    );
 
     /**
      * @dev Create a rental agreement
