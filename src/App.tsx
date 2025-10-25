@@ -93,7 +93,7 @@ const Header: React.FC = () => {
 const Navigation: React.FC = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
@@ -174,7 +174,7 @@ const Navigation: React.FC = () => {
 // ========== HOME PAGE ==========
 const HomePage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const { isConnected } = useWeb3();
   const { getPlatformStatistics } = useContracts();
   const [stats, setStats] = useState({ 
@@ -568,8 +568,8 @@ const Footer: React.FC = () => {
           <div className="footer-col">
             <div className="footer-brand-section">
               <div className="footer-logo">
-                <div className="logo-mark">K</div>
-                <span>Kreda.io</span>
+                <div className="logo-mark">SR</div>
+                <span>SmartRent</span>
               </div>
               <p className="footer-brand-description">
                 Децентрализованная платформа для безопасной аренды 
@@ -642,7 +642,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-copyright">
-            © 2025 Kreda.io. Все права защищены. Powered by Polygon Network.
+            © 2025 SmartRent. Все права защищены. Powered by Polygon Network.
           </div>
           <div className="footer-badges">
             <span className="footer-badge">🔒 Secure</span>
