@@ -1,7 +1,72 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { Search, Filter, MapPin, DollarSign, Home } from 'lucide-react';
 import { ListingCard } from '../components/ListingCard';
+import { ListingDetailsModal } from '../components/ListingDetailsModal';
 import { useContracts } from '../hooks/useContracts';
+
+// Mock data for demo when contracts not loaded
+const MOCK_LISTINGS = [
+  {
+    listingId: 1,
+    landlord: '0x1234567890123456789012345678901234567890',
+    title: 'Modern Apartment in Downtown',
+    description: 'Beautiful 2-bedroom apartment with stunning city views. Fully furnished and equipped with modern amenities including WiFi, AC, and parking.',
+    pricePerDay: '0.5',
+    deposit: '5.0',
+    isActive: true,
+    ipfsHash: 'QmExampleHash1',
+    createdAt: Math.floor(Date.now() / 1000) - 86400,
+    updatedAt: Math.floor(Date.now() / 1000) - 86400,
+  },
+  {
+    listingId: 2,
+    landlord: '0x2345678901234567890123456789012345678901',
+    title: 'Cozy Studio Near University',
+    description: 'Perfect for students or young professionals. Close to public transport and university campus. Includes utilities and internet.',
+    pricePerDay: '0.3',
+    deposit: '3.0',
+    isActive: true,
+    ipfsHash: 'QmExampleHash2',
+    createdAt: Math.floor(Date.now() / 1000) - 172800,
+    updatedAt: Math.floor(Date.now() / 1000) - 172800,
+  },
+  {
+    listingId: 3,
+    landlord: '0x3456789012345678901234567890123456789012',
+    title: 'Luxury Penthouse with Pool',
+    description: 'Exclusive penthouse with private pool and panoramic city views. Perfect for special occasions. 24/7 security and concierge.',
+    pricePerDay: '2.0',
+    deposit: '20.0',
+    isActive: false,
+    ipfsHash: 'QmExampleHash3',
+    createdAt: Math.floor(Date.now() / 1000) - 259200,
+    updatedAt: Math.floor(Date.now() / 1000) - 259200,
+  },
+  {
+    listingId: 4,
+    landlord: '0x4567890123456789012345678901234567890123',
+    title: 'Beachfront Villa with Garden',
+    description: 'Stunning villa right on the beach. Private garden, BBQ area, and direct beach access. Sleeps up to 8 people.',
+    pricePerDay: '1.5',
+    deposit: '15.0',
+    isActive: true,
+    ipfsHash: 'QmExampleHash4',
+    createdAt: Math.floor(Date.now() / 1000) - 345600,
+    updatedAt: Math.floor(Date.now() / 1000) - 345600,
+  },
+  {
+    listingId: 5,
+    landlord: '0x5678901234567890123456789012345678901234',
+    title: 'Mountain Cabin Retreat',
+    description: 'Peaceful mountain cabin perfect for weekend getaways. Fireplace, hiking trails, and beautiful nature views.',
+    pricePerDay: '0.8',
+    deposit: '8.0',
+    isActive: true,
+    ipfsHash: 'QmExampleHash5',
+    createdAt: Math.floor(Date.now() / 1000) - 432000,
+    updatedAt: Math.floor(Date.now() / 1000) - 432000,
+  },
+];
 
 export const BrowseListingsPage: React.FC = () => {
   const [listings, setListings] = useState<any[]>([]);
@@ -9,6 +74,7 @@ export const BrowseListingsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [showActiveOnly, setShowActiveOnly] = useState(true);
+  const [selectedListing, setSelectedListing] = useState<any>(null);
   const [, startTransition] = useTransition();
   const { getAllListings } = useContracts();
 
@@ -25,12 +91,23 @@ export const BrowseListingsPage: React.FC = () => {
     try {
       const allListings = await getAllListings();
       startTransition(() => {
-        setListings(allListings);
+        // Use mock data if no listings from contract
+        if (allListings.length === 0) {
+          console.log('📋 Using mock listings for demo');
+          setListings(MOCK_LISTINGS);
+        } else {
+          setListings(allListings);
+        }
         setIsLoading(false);
       });
     } catch (error) {
       console.error('Failed to load listings:', error);
-      setIsLoading(false);
+      // Use mock data on error
+      startTransition(() => {
+        console.log('📋 Using mock listings (fallback)');
+        setListings(MOCK_LISTINGS);
+        setIsLoading(false);
+      });
     }
   };
 
@@ -57,8 +134,10 @@ export const BrowseListingsPage: React.FC = () => {
   };
 
   const handleViewDetails = (listingId: number) => {
-    console.log('View details for listing:', listingId);
-    // TODO: Navigate to listing details page
+    const listing = listings.find(l => l.listingId === listingId);
+    if (listing) {
+      setSelectedListing(listing);
+    }
   };
 
   const handleRent = (listingId: number) => {
@@ -79,8 +158,15 @@ export const BrowseListingsPage: React.FC = () => {
   };
 
   return (
-    <section className="section">
-      <div className="container">
+    <>
+      <ListingDetailsModal
+        isOpen={!!selectedListing}
+        onClose={() => setSelectedListing(null)}
+        listing={selectedListing}
+      />
+
+      <section className="section">
+        <div className="container">
         {/* Page Header */}
         <div className="text-center mb-8">
           <h1 className="section-title">Browse Properties</h1>
@@ -174,5 +260,6 @@ export const BrowseListingsPage: React.FC = () => {
         )}
       </div>
     </section>
+    </>
   );
 };

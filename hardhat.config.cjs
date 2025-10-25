@@ -30,8 +30,9 @@ module.exports = {
       url: process.env.AMOY_RPC_URL || "https://rpc-amoy.polygon.technology",
       accounts,
       chainId: 80002,
-      gasPrice: 30000000000,
-      timeout: 60000,
+      gasPrice: 25000000000,
+      gasLimit: 8000000,
+      timeout: 120000,
     },
     mumbai: {
       url: process.env.MUMBAI_RPC_URL || "https://rpc-amoy.polygon.technology",

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useTransition } from 'react';
 import { Plus, Home, Edit, ToggleLeft, ToggleRight } from 'lucide-react';
 import { ListingCard } from '../components/ListingCard';
 import { CreateListingModal } from '../components/CreateListingModal';
+import { ListingDetailsModal } from '../components/ListingDetailsModal';
 import { useContracts } from '../hooks/useContracts';
 import { useWeb3 } from '../hooks/useWeb3';
 
@@ -9,6 +10,7 @@ export const MyListingsPage: React.FC = () => {
   const [listings, setListings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<any>(null);
   const [, startTransition] = useTransition();
   const { getUserListings } = useContracts();
   const { account, isConnected } = useWeb3();
@@ -58,8 +60,10 @@ export const MyListingsPage: React.FC = () => {
   };
 
   const handleViewDetails = (listingId: number) => {
-    console.log('View details for listing:', listingId);
-    // TODO: Navigate to listing details page
+    const listing = listings.find(l => l.listingId === listingId);
+    if (listing) {
+      setSelectedListing(listing);
+    }
   };
 
   const handleEditListing = (listingId: number) => {
@@ -178,6 +182,13 @@ export const MyListingsPage: React.FC = () => {
           isOpen={isCreateModalOpen}
           onClose={handleCloseModal}
           onSuccess={handleListingCreated}
+        />
+
+        {/* Listing Details Modal */}
+        <ListingDetailsModal
+          isOpen={!!selectedListing}
+          onClose={() => setSelectedListing(null)}
+          listing={selectedListing}
         />
       </div>
     </section>

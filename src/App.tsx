@@ -24,6 +24,7 @@ import {
 import { WalletButton } from './components/WalletButton';
 import { ListingCard } from './components/ListingCard';
 import { CreateListingModal } from './components/CreateListingModal';
+import { NetworkWarning } from './components/NetworkWarning';
 import { useWeb3 } from './hooks/useWeb3';
 import { useContracts } from './hooks/useContracts';
 import { BrowseListingsPage } from './pages/BrowseListingsPage';
@@ -206,7 +207,15 @@ const HomePage: React.FC = () => {
       });
     } catch (error) {
       console.error('Failed to load statistics:', error);
-      // Stats остаются в значении по умолчанию (0)
+      // Use mock stats for demo
+      startTransition(() => {
+        setStats({
+          totalListings: 5,
+          totalRentals: 12,
+          totalDisputes: 1,
+          totalVolume: 15.5
+        });
+      });
     }
   };
 
@@ -684,6 +693,8 @@ const Footer: React.FC = () => {
 
 // ========== MAIN APP COMPONENT ==========
 const App: React.FC = () => {
+  const { chainId, switchToHardhat, switchToAmoy } = useWeb3();
+
   return (
     <Router
       future={{
@@ -692,6 +703,11 @@ const App: React.FC = () => {
       }}
     >
       <Header />
+      <NetworkWarning 
+        currentChainId={chainId} 
+        onSwitchToHardhat={switchToHardhat}
+        onSwitchToAmoy={switchToAmoy}
+      />
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage />} />

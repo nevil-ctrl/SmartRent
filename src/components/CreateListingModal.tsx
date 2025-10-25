@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Upload, Image as ImageIcon, AlertCircle } from 'lucide-react';
 import { usePropertyImages } from '../hooks/useIPFS';
 import { useContracts } from '../hooks/useContracts';
+import { SuccessModal } from './SuccessModal';
 
 interface CreateListingModalProps {
   isOpen: boolean;
@@ -31,6 +32,10 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [createdListing, setCreatedListing] = useState<any>(null);
+  const [loadingMessage, setLoadingMessage] = useState<string>('');
+  const [canCancel, setCanCancel] = useState(true);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -50,6 +55,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
+    setCanCancel(true);
 
     try {
       // Validate form
@@ -62,9 +68,11 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
       }
 
       // Upload images to IPFS
+      setLoadingMessage('Uploading images to IPFS...');
       const imageHashes = await uploadPropertyImages(images);
 
       // Create property metadata
+      setLoadingMessage('Creating property metadata...');
       const metadata = await createPropertyMetadata({
         title: formData.title,
         description: formData.description,
@@ -75,6 +83,8 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
       });
 
       // Create listing on blockchain
+      setLoadingMessage('Creating listing on blockchain...');
+      setCanCancel(false); // Can't cancel blockchain transaction
       try {
         await createListing(
           formData.title,
@@ -87,6 +97,14 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
         console.error('Contract error:', error);
         throw new Error('Failed to create listing on blockchain: ' + error.message);
       }
+
+      // Save created listing data
+      setCreatedListing({
+        title: formData.title,
+        description: formData.description,
+        pricePerDay: formData.pricePerDay,
+        deposit: formData.deposit
+      });
 
       // Reset form
       setFormData({
@@ -101,27 +119,106 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
       });
       setImages([]);
 
+      // Show success modal
+      setShowSuccess(true);
       onSuccess();
       onClose();
     } catch (err: any) {
       setError(err.message || 'Failed to create listing');
     } finally {
       setIsSubmitting(false);
+      setLoadingMessage('');
+      setCanCancel(true);
     }
   };
 
-  if (!isOpen) return null;
+  const handleCancel = () => {
+    if (isSubmitting && !canCancel) {
+      // Can't cancel during blockchain transaction
+      return;
+    }
+    
+    // Reset all states
+    setIsSubmitting(false);
+    setLoadingMessage('');
+    setError(null);
+    setCanCancel(true);
+    onClose();
+  };
+
+  if (!isOpen) return (
+    <>
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Listing Created Successfully! 🎉"
+        message="Your property listing has been created and deployed to the blockchain!"
+        listingData={createdListing}
+      />
+    </>
+  );
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <>
+      <div className="modal-overlay">
+      <div className="modal-content" style={{ position: 'relative' }}>
+        
+        {/* Loading Overlay */}
+        {isSubmitting && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            zIndex: 1000,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--spacing-lg)',
+            borderRadius: 'var(--radius-xl)'
+          }}>
+            <div className="spinner" style={{ width: '48px', height: '48px' }} />
+            <div style={{ textAlign: 'center' }}>
+              <h3 style={{ margin: 0, marginBottom: 'var(--spacing-sm)', fontSize: 'var(--font-size-lg)' }}>
+                {loadingMessage || 'Processing...'}
+              </h3>
+              <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {canCancel ? 'This may take a few moments' : 'Please confirm transaction in MetaMask'}
+              </p>
+            </div>
+            {canCancel && (
+              <button
+                onClick={handleCancel}
+                className="btn btn-secondary"
+              >
+                Cancel
+              </button>
+            )}
+            {!canCancel && (
+              <p style={{ 
+                margin: 0, 
+                color: 'var(--color-warning)', 
+                fontSize: 'var(--font-size-xs)',
+                fontWeight: 600
+              }}>
+                ⚠️ Cannot cancel blockchain transaction
+              </p>
+            )}
+          </div>
+        )}
+        
+      
         {/* Header */}
         <div className="modal-header">
           <h2 className="modal-title">Create Property Listing</h2>
           <button
-            onClick={onClose}
+            onClick={handleCancel}
             className="modal-close"
             type="button"
+            disabled={isSubmitting && !canCancel}
           >
             <X style={{ width: '20px', height: '20px' }} />
           </button>
@@ -351,8 +448,9 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
           <div className="modal-footer">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleCancel}
               className="btn btn-secondary"
+              disabled={isSubmitting && !canCancel}
             >
               Cancel
             </button>
@@ -377,5 +475,14 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
         </form>
       </div>
     </div>
+
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Listing Created Successfully! 🎉"
+        message="Your property listing has been created and deployed to the blockchain!"
+        listingData={createdListing}
+      />
+    </>
   );
 };

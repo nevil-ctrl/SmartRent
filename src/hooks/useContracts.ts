@@ -89,6 +89,14 @@ const DEFAULT_SMARTRENT_ADDRESS =
   "0x0000000000000000000000000000000000000000";
 
 export const CONTRACT_ADDRESSES = {
+  1337: {
+    // Hardhat Local (основной)
+    SmartRent: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+  },
+  31337: {
+    // Hardhat Local (альтернативный)
+    SmartRent: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+  },
   80002: {
     // Polygon Amoy testnet (новый Mumbai)
     SmartRent: DEFAULT_SMARTRENT_ADDRESS,
@@ -99,15 +107,7 @@ export const CONTRACT_ADDRESSES = {
   },
   137: {
     // Polygon Mainnet
-    SmartRent: "0x0000000000000000000000000000000000000000",
-  },
-  1337: {
-    // Hardhat локальный
-    SmartRent: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-  },
-  31337: {
-    // Hardhat node
-    SmartRent: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    SmartRent: DEFAULT_SMARTRENT_ADDRESS,
   },
 };
 

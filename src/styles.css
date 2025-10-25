@@ -3,6 +3,38 @@
    Цветовая палитра и адаптивная верстка
    ===================================================== */
 
+/* === АНИМАЦИИ === */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* === ЦВЕТОВАЯ ПАЛИТРА === */
 :root {
   /* Основные цвета */
@@ -13,12 +45,14 @@
   /* Вторичные цвета */
   --color-secondary: #10b981; /* Зеленый - успех */
   --color-secondary-light: #d1fae5; /* Светлый зеленый */
+  --color-success: #28a745; /* Зеленый - успех */
+  --color-success-light: #d4edda; /* Светло-зеленый для фона */
   --color-warning: #f59e0b; /* Оранжевый - предупреждение */
   --color-warning-light: #fef3c7; /* Светлый оранжевый */
   --color-danger: #ef4444; /* Красный - ошибка */
   --color-danger-light: #fee2e2; /* Светлый красный */
   --color-info: #3b82f6; /* Синий - информация */
-  --color-success-light: #d1fae5; /* Alias for secondary-light */
+  --color-info-light: #d1ecf1; /* Светло-синий для фона */
 
   /* Нейтральные цвета */
   --color-text-primary: #1f2937; /* Темно-серый текст */

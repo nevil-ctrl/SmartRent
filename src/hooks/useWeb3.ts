@@ -16,6 +16,7 @@ interface Web3Actions {
   disconnect: () => void;
   switchToPolygon: () => Promise<void>;
   switchToAmoy: () => Promise<void>;
+  switchToHardhat: () => Promise<void>;
 }
 
 declare global {
@@ -56,6 +57,17 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     nativeCurrency: {
       name: "MATIC",
       symbol: "MATIC",
+      decimals: 18,
+    },
+  };
+
+  const HARDHAT_LOCAL = {
+    chainId: "0x539", // 1337
+    chainName: "Hardhat Local",
+    rpcUrls: ["http://localhost:8545"],
+    nativeCurrency: {
+      name: "Ethereum",
+      symbol: "ETH",
       decimals: 18,
     },
   };
@@ -142,6 +154,25 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     }
   }, []);
 
+  const switchToHardhat = useCallback(async () => {
+    if (typeof window === "undefined" || !window.ethereum) return;
+
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: HARDHAT_LOCAL.chainId }],
+      });
+    } catch (error: any) {
+      if (error.code === 4902) {
+        // Chain not added, add it
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [HARDHAT_LOCAL],
+        });
+      }
+    }
+  }, []);
+
   // Check if already connected on mount
   useEffect(() => {
     const checkConnection = async () => {
@@ -204,5 +235,6 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     disconnect,
     switchToPolygon,
     switchToAmoy,
+    switchToHardhat,
   };
 };
