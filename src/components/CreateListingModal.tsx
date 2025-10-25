@@ -16,7 +16,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
 }) => {
   const { uploadPropertyImages, createPropertyMetadata, isUploading } = usePropertyImages();
   const { createListing } = useContracts();
-  
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -27,7 +27,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
     rules: '',
     specialConditions: ''
   });
-  
+
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +100,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
         specialConditions: ''
       });
       setImages([]);
-      
+
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -113,235 +113,262 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="modal-overlay">
+      <div className="modal-content">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">Create Property Listing</h2>
+        <div className="modal-header">
+          <h2 className="modal-title">Create Property Listing</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="modal-close"
+            type="button"
           >
-            <X className="w-5 h-5" />
+            <X style={{ width: '20px', height: '20px' }} />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {error && (
-            <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-lg">
-              <AlertCircle className="w-5 h-5" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Property Title *
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                className="input"
-                placeholder="e.g., Modern Apartment in City Center"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description *
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                className="input h-24 resize-none"
-                placeholder="Describe your property in detail..."
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
-              </label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                className="input"
-                placeholder="e.g., Downtown, New York"
-              />
-            </div>
-          </div>
-
-          {/* Pricing */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Pricing</h3>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Daily Rate (MATIC) *
-                </label>
-                <input
-                  type="number"
-                  name="pricePerDay"
-                  value={formData.pricePerDay}
-                  onChange={handleInputChange}
-                  className="input"
-                  placeholder="0.1"
-                  step="0.01"
-                  min="0"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Security Deposit (MATIC) *
-                </label>
-                <input
-                  type="number"
-                  name="deposit"
-                  value={formData.deposit}
-                  onChange={handleInputChange}
-                  className="input"
-                  placeholder="1.0"
-                  step="0.01"
-                  min="0"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Images */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Property Images</h3>
-            
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="image-upload"
-              />
-              <label
-                htmlFor="image-upload"
-                className="cursor-pointer flex flex-col items-center space-y-2"
-              >
-                <Upload className="w-8 h-8 text-gray-400" />
-                <span className="text-sm text-gray-600">
-                  Click to upload images or drag and drop
-                </span>
-                <span className="text-xs text-gray-500">
-                  PNG, JPG, GIF up to 10MB each
-                </span>
-              </label>
-            </div>
-
-            {/* Image Preview */}
-            {images.length > 0 && (
-              <div className="grid grid-cols-3 gap-4">
-                {images.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+            {error && (
+              <div className="wallet-error">
+                <AlertCircle style={{ width: '20px', height: '20px' }} />
+                <span>{error}</span>
               </div>
             )}
+
+            {/* Basic Information */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+              <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, marginBottom: 0 }}>
+                Basic Information
+              </h3>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Property Title *</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="e.g., Modern Apartment in City Center"
+                  required
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Description *</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  className="form-textarea"
+                  placeholder="Describe your property in detail..."
+                  required
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="e.g., Downtown, New York"
+                />
+              </div>
+            </div>
+
+            {/* Pricing */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+              <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, marginBottom: 0 }}>
+                Pricing
+              </h3>
+
+              <div className="grid grid-cols-2" style={{ gap: 'var(--spacing-md)' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Daily Rate (MATIC) *</label>
+                  <input
+                    type="number"
+                    name="pricePerDay"
+                    value={formData.pricePerDay}
+                    onChange={handleInputChange}
+                    className="form-input"
+                    placeholder="0.1"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Security Deposit (MATIC) *</label>
+                  <input
+                    type="number"
+                    name="deposit"
+                    value={formData.deposit}
+                    onChange={handleInputChange}
+                    className="form-input"
+                    placeholder="1.0"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Images */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+              <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, marginBottom: 0 }}>
+                Property Images
+              </h3>
+
+              <div style={{
+                border: '2px dashed var(--color-border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 'var(--spacing-xl)',
+                textAlign: 'center'
+              }}>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  style={{ display: 'none' }}
+                  id="image-upload"
+                />
+                <label
+                  htmlFor="image-upload"
+                  style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 'var(--spacing-sm)'
+                  }}
+                >
+                  <Upload style={{ width: '32px', height: '32px', color: 'var(--color-text-muted)' }} />
+                  <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                    Click to upload images or drag and drop
+                  </span>
+                  <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                    PNG, JPG, GIF up to 10MB each
+                  </span>
+                </label>
+              </div>
+
+              {/* Image Preview */}
+              {images.length > 0 && (
+                <div className="grid grid-cols-3" style={{ gap: 'var(--spacing-md)' }}>
+                  {images.map((image, index) => (
+                    <div key={index} style={{ position: 'relative' }}>
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`Preview ${index + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '96px',
+                          objectFit: 'cover',
+                          borderRadius: 'var(--radius-lg)'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        style={{
+                          position: 'absolute',
+                          top: '-8px',
+                          right: '-8px',
+                          backgroundColor: 'var(--color-danger)',
+                          color: 'white',
+                          borderRadius: 'var(--radius-full)',
+                          width: '24px',
+                          height: '24px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 'var(--font-size-lg)',
+                          border: 'none',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Additional Information */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+              <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, marginBottom: 0 }}>
+                Additional Information
+              </h3>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Amenities (comma-separated)</label>
+                <input
+                  type="text"
+                  name="amenities"
+                  value={formData.amenities}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="e.g., WiFi, Parking, Pool, Gym"
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">House Rules (comma-separated)</label>
+                <input
+                  type="text"
+                  name="rules"
+                  value={formData.rules}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="e.g., No smoking, No pets, Quiet hours after 10pm"
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Special Conditions</label>
+                <textarea
+                  name="specialConditions"
+                  value={formData.specialConditions}
+                  onChange={handleInputChange}
+                  className="form-textarea"
+                  style={{ minHeight: '80px' }}
+                  placeholder="Any special conditions or notes..."
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Additional Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Additional Information</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Amenities (comma-separated)
-              </label>
-              <input
-                type="text"
-                name="amenities"
-                value={formData.amenities}
-                onChange={handleInputChange}
-                className="input"
-                placeholder="e.g., WiFi, Parking, Pool, Gym"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                House Rules (comma-separated)
-              </label>
-              <input
-                type="text"
-                name="rules"
-                value={formData.rules}
-                onChange={handleInputChange}
-                className="input"
-                placeholder="e.g., No smoking, No pets, Quiet hours after 10pm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Special Conditions
-              </label>
-              <textarea
-                name="specialConditions"
-                value={formData.specialConditions}
-                onChange={handleInputChange}
-                className="input h-20 resize-none"
-                placeholder="Any special conditions or notes..."
-              />
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex space-x-4 pt-4">
+          {/* Footer */}
+          <div className="modal-footer">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 btn-secondary"
+              className="btn btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isUploading}
-              className="flex-1 btn-primary flex items-center justify-center space-x-2"
+              className="btn btn-primary"
             >
               {isSubmitting || isUploading ? (
                 <>
-                  <div className="spinner w-4 h-4" />
+                  <div className="spinner spinner-sm" />
                   <span>Creating...</span>
                 </>
               ) : (
                 <>
-                  <ImageIcon className="w-4 h-4" />
+                  <ImageIcon style={{ width: '20px', height: '20px' }} />
                   <span>Create Listing</span>
                 </>
               )}

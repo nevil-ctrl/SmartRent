@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { 
-  Home, 
-  Plus, 
-  Search, 
-  User, 
-  FileText, 
-  Shield, 
+import {
+  Home,
+  Plus,
+  Search,
+  User,
+  FileText,
+  Shield,
   Star,
   Menu,
   X
@@ -57,9 +57,33 @@ const mockListings = [
   },
 ];
 
+// ========== HEADER COMPONENT ==========
+const Header: React.FC = () => {
+  return (
+    <header className="app-header">
+      <div className="container">
+        <div className="header-container">
+          <Link to="/" className="nav-brand">
+            <div className="logo-mark">SR</div>
+            <span>SmartRent</span>
+          </Link>
+
+          <Navigation />
+          
+          <div className="wallet-container">
+            <WalletButton />
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ========== NAVIGATION COMPONENT ==========
 const Navigation: React.FC = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
@@ -70,20 +94,51 @@ const Navigation: React.FC = () => {
     { path: '/reputation', label: 'Reputation', icon: Star },
   ];
 
-  return (
-    <nav className="navbar">
-      <div className="container">
-        <div className="navbar__inner">
-          {/* Logo */}
-          <Link to="/" className="brand">
-            <div className="logo-mark">
-              <span className="text-white font-bold text-sm">SR</span>
-            </div>
-            <span className="brand__name">SmartRent</span>
-          </Link>
+  const handleMenuToggle = () => {
+    startTransition(() => {
+      setIsMobileMenuOpen(!isMobileMenuOpen);
+    });
+  };
 
-          {/* Desktop Navigation */}
-          <div className="nav-links md:flex hidden">
+  const handleLinkClick = () => {
+    startTransition(() => {
+      setIsMobileMenuOpen(false);
+    });
+  };
+
+  return (
+    <>
+      {/* Desktop Navigation */}
+      <nav className="nav-menu">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`nav-link ${isActive ? 'active' : ''}`}
+            >
+              <Icon />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Mobile Menu Toggle */}
+      <button
+        onClick={handleMenuToggle}
+        className="mobile-menu-toggle"
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <X /> : <Menu />}
+      </button>
+
+      {/* Mobile Navigation Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu open">
+          <nav className="nav-menu">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -91,74 +146,49 @@ const Navigation: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`nav-link ${isActive ? 'is-active' : ''}`}
+                  onClick={handleLinkClick}
+                  className={`nav-link ${isActive ? 'active' : ''}`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon />
                   <span>{item.label}</span>
                 </Link>
               );
             })}
-      </div>
-
-          {/* Wallet Button */}
-          <div className="nav-actions">
-            <WalletButton />
-            
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="mobile-toggle md:hidden"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-          </div>
+          </nav>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="mobile-menu md:hidden">
-            <div className="space-y-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`mobile-menu__item ${isActive ? 'is-active' : ''}`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+      )}
+    </>
   );
 };
 
+// ========== HOME PAGE ==========
 const HomePage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const { isConnected } = useWeb3();
   const { getPlatformStatistics } = useContracts();
-  const [stats, setStats] = useState({ totalListings: 0, totalRentals: 0, totalDisputes: 0, totalVolume: 0 });
+  const [stats, setStats] = useState({ 
+    totalListings: 0, 
+    totalRentals: 0, 
+    totalDisputes: 0, 
+    totalVolume: 0 
+  });
 
   useEffect(() => {
     const loadStats = async () => {
       try {
         const statistics = await getPlatformStatistics();
-        setStats({
-          totalListings: Number(statistics[0]),
-          totalRentals: Number(statistics[1]),
-          totalDisputes: Number(statistics[2]),
-          totalVolume: Number(statistics[3]) / 1e18, // Convert from wei to MATIC
+        startTransition(() => {
+          setStats({
+            totalListings: Number(statistics[0]),
+            totalRentals: Number(statistics[1]),
+            totalDisputes: Number(statistics[2]),
+            totalVolume: Number(statistics[3]) / 1e18, // Convert from wei to MATIC
+          });
         });
       } catch (error) {
         console.error('Failed to load statistics:', error);
+        // Stats остаются в значении по умолчанию (0)
       }
     };
 
@@ -173,106 +203,161 @@ const HomePage: React.FC = () => {
     console.log('Rent listing:', listingId);
   };
 
+  const handleOpenModal = () => {
+    startTransition(() => {
+      setIsCreateModalOpen(true);
+    });
+  };
+
+  const handleCloseModal = () => {
+    startTransition(() => {
+      setIsCreateModalOpen(false);
+    });
+  };
+
   return (
-    <div className="app">
+    <>
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white">
-        <div className="container px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Decentralized Property Rental
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Rent properties securely on Polygon with smart contracts and IPFS storage
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-4 justify-center">
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                disabled={!isConnected}
-                className="btn-primary bg-white text-blue-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                List Your Property
-              </button>
-              <button className="btn-outline border-white text-white hover:bg-white hover:text-blue-600">
-                <Search className="w-5 h-5 mr-2" />
-                Browse Properties
-              </button>
+      <section className="hero">
+        <div className="container">
+          <h1 className="hero-title">Decentralized Property Rental</h1>
+          <p className="hero-subtitle">
+            Rent properties securely on Polygon with smart contracts and IPFS storage
+          </p>
+          <div className="hero-actions">
+            <button
+              onClick={handleOpenModal}
+              disabled={!isConnected}
+              className="btn btn-outline-light btn-lg"
+            >
+              <Plus />
+              List Your Property
+            </button>
+            <Link to="/listings" className="btn btn-outline-light btn-lg">
+              <Search />
+              Browse Properties
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="section">
+        <div className="container">
+          <div className="grid grid-cols-4">
+            <div className="card stats-card">
+              <div className="stats-value primary">{stats.totalListings}</div>
+              <div className="stats-label">Total Listings</div>
+            </div>
+            <div className="card stats-card">
+              <div className="stats-value success">{stats.totalRentals}</div>
+              <div className="stats-label">Completed Rentals</div>
+            </div>
+            <div className="card stats-card">
+              <div className="stats-value warning">{stats.totalDisputes}</div>
+              <div className="stats-label">Disputes Resolved</div>
+            </div>
+            <div className="card stats-card">
+              <div className="stats-value primary">{stats.totalVolume.toFixed(2)}</div>
+              <div className="stats-label">Total Volume (MATIC)</div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Statistics */}
-      <div className="container px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="card text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">{stats.totalListings}</div>
-            <div className="text-gray-600">Total Listings</div>
+      {/* Featured Listings Section */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Featured Properties</h2>
+            <Link to="/listings" className="btn btn-outline">
+              View All →
+            </Link>
           </div>
-          <div className="card text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">{stats.totalRentals}</div>
-            <div className="text-gray-600">Completed Rentals</div>
-          </div>
-          <div className="card text-center">
-            <div className="text-3xl font-bold text-yellow-600 mb-2">{stats.totalDisputes}</div>
-            <div className="text-gray-600">Disputes Resolved</div>
-          </div>
-          <div className="card text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-2">{stats.totalVolume.toFixed(2)}</div>
-            <div className="text-gray-600">Total Volume (MATIC)</div>
-          </div>
-        </div>
-      </div>
 
-      {/* Featured Listings */}
-      <div className="container px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Featured Properties</h2>
-          <Link to="/listings" className="text-blue-600 hover:text-blue-700 font-medium">
-            View All →
-          </Link>
+          <div className="grid grid-cols-3">
+            {mockListings.map((listing) => (
+              <ListingCard
+                key={listing.listingId}
+                listing={listing}
+                onViewDetails={handleViewDetails}
+                onRent={handleRent}
+              />
+            ))}
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockListings.map((listing) => (
-            <ListingCard
-              key={listing.listingId}
-              listing={listing}
-              onViewDetails={handleViewDetails}
-              onRent={handleRent}
-            />
-          ))}
-        </div>
-      </div>
+      </section>
 
       {/* Create Listing Modal */}
       <CreateListingModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={handleCloseModal}
         onSuccess={() => {
           console.log('Listing created successfully');
-          // Refresh listings or show success message
+          handleCloseModal();
         }}
       />
-    </div>
+    </>
   );
 };
 
+// ========== PLACEHOLDER PAGES ==========
+const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => {
+  return (
+    <section className="section">
+      <div className="container">
+        <div className="text-center">
+          <h2>{title}</h2>
+          <p style={{ color: 'var(--color-text-secondary)' }}>Coming Soon</p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ========== FOOTER COMPONENT ==========
+const Footer: React.FC = () => {
+  return (
+    <footer className="app-footer">
+      <div className="container">
+        <div className="footer-content">
+          <div className="footer-brand">SmartRent</div>
+          <ul className="footer-links">
+            <li><a href="#" className="footer-link">About</a></li>
+            <li><a href="#" className="footer-link">Documentation</a></li>
+            <li><a href="#" className="footer-link">Support</a></li>
+            <li><a href="#" className="footer-link">GitHub</a></li>
+          </ul>
+          <div className="footer-copyright">
+            © 2025 SmartRent. Powered by Polygon.
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// ========== MAIN APP COMPONENT ==========
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="app">
-        <Navigation />
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
+      <Header />
+      <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/listings" element={<div className="p-8 text-center">Browse Listings - Coming Soon</div>} />
-          <Route path="/my-listings" element={<div className="p-8 text-center">My Listings - Coming Soon</div>} />
-          <Route path="/rentals" element={<div className="p-8 text-center">My Rentals - Coming Soon</div>} />
-          <Route path="/disputes" element={<div className="p-8 text-center">Disputes - Coming Soon</div>} />
-          <Route path="/reputation" element={<div className="p-8 text-center">Reputation - Coming Soon</div>} />
+          <Route path="/listings" element={<PlaceholderPage title="Browse Listings" />} />
+          <Route path="/my-listings" element={<PlaceholderPage title="My Listings" />} />
+          <Route path="/rentals" element={<PlaceholderPage title="My Rentals" />} />
+          <Route path="/disputes" element={<PlaceholderPage title="Disputes" />} />
+          <Route path="/reputation" element={<PlaceholderPage title="Reputation" />} />
         </Routes>
-      </div>
+      </main>
+      <Footer />
     </Router>
   );
 };

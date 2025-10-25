@@ -3,16 +3,16 @@ import { useWeb3 } from '../hooks/useWeb3';
 import { Wallet, LogOut, AlertCircle } from 'lucide-react';
 
 export const WalletButton: React.FC = () => {
-  const { 
-    account, 
-    isConnected, 
-    isConnecting, 
-    error, 
-    connect, 
-    disconnect, 
-    switchToPolygon, 
+  const {
+    account,
+    isConnected,
+    isConnecting,
+    error,
+    connect,
+    disconnect,
+    switchToPolygon,
     switchToMumbai,
-    chainId 
+    chainId
   } = useWeb3();
 
   const formatAddress = (address: string) => {
@@ -27,78 +27,68 @@ export const WalletButton: React.FC = () => {
         return 'Mumbai';
       case 1337:
         return 'Local';
+      case 31337:
+        return 'Hardhat';
       default:
         return 'Unknown';
     }
   };
 
+  const isCorrectNetwork = chainId === 137 || chainId === 80001;
+
+  // Error state
   if (error) {
     return (
-      <div className="flex items-center space-x-2 text-red-600 bg-red-50 px-4 py-2 rounded-lg">
-        <AlertCircle className="w-5 h-5" />
-        <span className="text-sm">{error}</span>
-        <button
-          onClick={connect}
-          className="text-sm underline hover:no-underline"
-        >
-          Retry
-        </button>
+      <div className="wallet-error">
+        <AlertCircle style={{ width: '20px', height: '20px' }} />
+        <span>{error}</span>
+        <button onClick={connect}>Retry</button>
       </div>
     );
   }
 
+  // Not connected state
   if (!isConnected) {
     return (
       <button
         onClick={connect}
         disabled={isConnecting}
-        className="btn-primary flex items-center space-x-2"
+        className="btn btn-primary"
       >
-        <Wallet className="w-5 h-5" />
+        <Wallet />
         <span>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
       </button>
     );
   }
 
+  // Connected state
   return (
-    <div className="flex items-center space-x-4">
+    <div className="wallet-container">
       {/* Network Status */}
-      <div className="flex items-center space-x-2">
-        <div className={`w-3 h-3 rounded-full ${
-          chainId === 137 || chainId === 80001 ? 'bg-green-500' : 'bg-yellow-500'
-        }`} />
-        <span className="text-sm text-gray-600">
-          {getNetworkName(chainId)}
-        </span>
+      <div className="wallet-network">
+        <div className={`network-indicator ${isCorrectNetwork ? 'connected' : 'disconnected'}`} />
+        <span>{getNetworkName(chainId)}</span>
       </div>
 
       {/* Account Info */}
-      <div className="flex items-center space-x-2 bg-white rounded-lg px-3 py-2 shadow-sm border">
-        <Wallet className="w-4 h-4 text-gray-500" />
-        <span className="text-sm font-medium text-gray-700">
-          {formatAddress(account!)}
-        </span>
+      <div className="wallet-account">
+        <Wallet />
+        <span>{formatAddress(account!)}</span>
       </div>
 
       {/* Network Switch Buttons */}
-      <div className="flex space-x-1">
+      <div className="wallet-network-switch">
         <button
           onClick={switchToMumbai}
-          className={`px-2 py-1 text-xs rounded ${
-            chainId === 80001 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-          }`}
+          className={`btn btn-sm ${chainId === 80001 ? 'btn-primary' : 'btn-secondary'}`}
+          title="Switch to Mumbai Testnet"
         >
           Mumbai
         </button>
         <button
           onClick={switchToPolygon}
-          className={`px-2 py-1 text-xs rounded ${
-            chainId === 137 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-          }`}
+          className={`btn btn-sm ${chainId === 137 ? 'btn-primary' : 'btn-secondary'}`}
+          title="Switch to Polygon Mainnet"
         >
           Polygon
         </button>
@@ -107,10 +97,10 @@ export const WalletButton: React.FC = () => {
       {/* Disconnect Button */}
       <button
         onClick={disconnect}
-        className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+        className="wallet-disconnect"
         title="Disconnect Wallet"
       >
-        <LogOut className="w-4 h-4" />
+        <LogOut style={{ width: '20px', height: '20px' }} />
       </button>
     </div>
   );
