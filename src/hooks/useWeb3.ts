@@ -18,6 +18,12 @@ interface Web3Actions {
   switchToMumbai: () => Promise<void>;
 }
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 export const useWeb3 = (): Web3State & Web3Actions => {
   const [state, setState] = useState<Web3State>({
     account: null,
@@ -55,7 +61,7 @@ export const useWeb3 = (): Web3State & Web3Actions => {
   };
 
   const connect = useCallback(async () => {
-    if (!window.ethereum) {
+    if (typeof window === 'undefined' || !window.ethereum) {
       setState(prev => ({ ...prev, error: 'MetaMask not installed' }));
       return;
     }
@@ -99,7 +105,7 @@ export const useWeb3 = (): Web3State & Web3Actions => {
   }, []);
 
   const switchToPolygon = useCallback(async () => {
-    if (!window.ethereum) return;
+    if (typeof window === 'undefined' || !window.ethereum) return;
 
     try {
       await window.ethereum.request({
@@ -118,7 +124,7 @@ export const useWeb3 = (): Web3State & Web3Actions => {
   }, []);
 
   const switchToMumbai = useCallback(async () => {
-    if (!window.ethereum) return;
+    if (typeof window === 'undefined' || !window.ethereum) return;
 
     try {
       await window.ethereum.request({
@@ -139,7 +145,7 @@ export const useWeb3 = (): Web3State & Web3Actions => {
   // Check if already connected on mount
   useEffect(() => {
     const checkConnection = async () => {
-      if (!window.ethereum) return;
+      if (typeof window === 'undefined' || !window.ethereum) return;
 
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
@@ -169,7 +175,7 @@ export const useWeb3 = (): Web3State & Web3Actions => {
 
   // Listen for account changes
   useEffect(() => {
-    if (!window.ethereum) return;
+    if (typeof window === 'undefined' || !window.ethereum) return;
 
     const handleAccountsChanged = (accounts: string[]) => {
       if (accounts.length === 0) {

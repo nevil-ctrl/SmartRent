@@ -80,7 +80,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({
 
         {/* Pricing */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-1 text-green-600">
+        <div className="flex items-center space-x-1 text-green-600">
             <DollarSign className="w-4 h-4" />
             <span className="font-semibold">
               {formatPrice(listing.pricePerDay)}/day

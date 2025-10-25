@@ -1,6 +1,15 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
+const normalizePrivateKey = (key) => {
+  if (!key) return null;
+  const stripped = key.startsWith("0x") ? key.slice(2) : key;
+  return stripped.length === 64 ? "0x" + stripped : null;
+};
+
+const PRIVATE_KEY = normalizePrivateKey(process.env.PRIVATE_KEY);
+const accounts = PRIVATE_KEY ? [PRIVATE_KEY] : [];
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
@@ -19,12 +28,12 @@ module.exports = {
     },
     mumbai: {
       url: process.env.MUMBAI_RPC_URL || "https://rpc-mumbai.maticvigil.com",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       chainId: 80001,
     },
     polygon: {
       url: process.env.POLYGON_RPC_URL || "https://polygon-rpc.com",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       chainId: 137,
     },
   },
