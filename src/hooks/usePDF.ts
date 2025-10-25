@@ -34,7 +34,7 @@ interface RentalContractData {
 
 export const usePDF = (): PDFState & PDFActions => {
   const { signer } = useWeb3();
-  const { uploadFile, getFileURL } = useIPFS();
+  const { uploadFile } = useIPFS();
   const [state, setState] = useState<PDFState>({
     isGenerating: false,
     isSigning: false,

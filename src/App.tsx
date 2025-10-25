@@ -71,19 +71,19 @@ const Navigation: React.FC = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-lg border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="navbar">
+      <div className="container">
+        <div className="navbar__inner">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <Link to="/" className="brand">
+            <div className="logo-mark">
               <span className="text-white font-bold text-sm">SR</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">SmartRent</span>
+            <span className="brand__name">SmartRent</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="nav-links md:flex hidden">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -91,11 +91,7 @@ const Navigation: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
+                  className={`nav-link ${isActive ? 'is-active' : ''}`}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{item.label}</span>
@@ -105,13 +101,13 @@ const Navigation: React.FC = () => {
       </div>
 
           {/* Wallet Button */}
-          <div className="flex items-center space-x-4">
+          <div className="nav-actions">
             <WalletButton />
             
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+              className="mobile-toggle md:hidden"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -120,7 +116,7 @@ const Navigation: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t">
+          <div className="mobile-menu md:hidden">
             <div className="space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -130,11 +126,7 @@ const Navigation: React.FC = () => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
+                    className={`mobile-menu__item ${isActive ? 'is-active' : ''}`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{item.label}</span>
@@ -182,10 +174,10 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="app">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="container px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Decentralized Property Rental
@@ -193,7 +185,7 @@ const HomePage: React.FC = () => {
             <p className="text-xl md:text-2xl mb-8 text-blue-100">
               Rent properties securely on Polygon with smart contracts and IPFS storage
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-4 justify-center">
               <button
                 onClick={() => setIsCreateModalOpen(true)}
                 disabled={!isConnected}
@@ -212,7 +204,7 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* Statistics */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="card text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">{stats.totalListings}</div>
@@ -234,7 +226,7 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* Featured Listings */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Featured Properties</h2>
           <Link to="/listings" className="text-blue-600 hover:text-blue-700 font-medium">
@@ -270,7 +262,7 @@ const HomePage: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="app">
         <Navigation />
         <Routes>
           <Route path="/" element={<HomePage />} />
