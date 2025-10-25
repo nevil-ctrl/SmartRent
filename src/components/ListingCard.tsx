@@ -42,96 +42,76 @@ export const ListingCard: React.FC<ListingCardProps> = ({
   };
 
   return (
-    <div className="card hover:shadow-xl transition-shadow duration-300">
+    <article className="listing-card">
       {/* Property Image */}
-      <div className="relative mb-4">
+      <div className="listing-image">
         {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={listing.title}
-            className="w-full h-48 object-cover rounded-lg"
-          />
+          <img src={imageUrl} alt={listing.title} />
         ) : (
-          <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
-            <Eye className="w-12 h-12 text-gray-400" />
+          <div className="listing-image-placeholder">
+            <Eye style={{ width: '48px', height: '48px' }} />
           </div>
         )}
-        
+
         {/* Status Badge */}
-        <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${
-          listing.isActive 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-red-100 text-red-800'
-        }`}>
+        <div className={`listing-badge badge ${listing.isActive ? 'badge-success' : 'badge-danger'}`}>
           {listing.isActive ? 'Available' : 'Unavailable'}
         </div>
       </div>
 
-      {/* Property Details */}
-      <div className="space-y-3">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">
-            {listing.title}
-          </h3>
-          <p className="text-gray-600 text-sm">
-            {truncateDescription(listing.description)}
-          </p>
-        </div>
+      {/* Property Content */}
+      <div className="listing-content">
+        <h3 className="listing-title">{listing.title}</h3>
+        <p className="listing-description">
+          {truncateDescription(listing.description)}
+        </p>
 
         {/* Pricing */}
-        <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-1 text-green-600">
-            <DollarSign className="w-4 h-4" />
-            <span className="font-semibold">
-              {formatPrice(listing.pricePerDay)}/day
-            </span>
+        <div className="listing-price-row">
+          <div className="listing-price">
+            <DollarSign style={{ width: '18px', height: '18px' }} />
+            <span>{formatPrice(listing.pricePerDay)}/day</span>
           </div>
-          <div className="flex items-center space-x-1 text-gray-500">
-            <Shield className="w-4 h-4" />
-            <span className="text-sm">
-              {formatPrice(listing.deposit)} deposit
-            </span>
+          <div className="listing-deposit">
+            <Shield style={{ width: '16px', height: '16px' }} />
+            <span>{formatPrice(listing.deposit)} deposit</span>
           </div>
         </div>
 
         {/* Metadata */}
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <div className="flex items-center space-x-1">
-            <MapPin className="w-4 h-4" />
-            <span>Property ID: #{listing.listingId}</span>
+        <div className="listing-meta">
+          <div className="listing-meta-item">
+            <MapPin style={{ width: '16px', height: '16px' }} />
+            <span>ID #{listing.listingId}</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Calendar className="w-4 h-4" />
+          <div className="listing-meta-item">
+            <Calendar style={{ width: '16px', height: '16px' }} />
             <span>{formatDate(listing.createdAt)}</span>
           </div>
         </div>
 
         {/* Landlord Address */}
-        <div className="text-xs text-gray-400">
+        <div className="listing-landlord">
           Landlord: {listing.landlord.slice(0, 6)}...{listing.landlord.slice(-4)}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-2 pt-2">
+        <div className="listing-actions">
           <button
             onClick={() => onViewDetails(listing.listingId)}
-            className="flex-1 btn-outline text-sm"
+            className="btn btn-outline btn-sm"
           >
             View Details
           </button>
           <button
             onClick={() => onRent(listing.listingId)}
             disabled={!listing.isActive}
-            className={`flex-1 text-sm ${
-              listing.isActive
-                ? 'btn-primary'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
+            className={`btn btn-sm ${listing.isActive ? 'btn-primary' : 'btn-secondary'}`}
           >
             {listing.isActive ? 'Rent Now' : 'Unavailable'}
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };

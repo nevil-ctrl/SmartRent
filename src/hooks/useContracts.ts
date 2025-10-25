@@ -235,9 +235,19 @@ export const useContracts = (): ContractState & ContractActions => {
   }, [state.smartRent]);
 
   const getPlatformStatistics = useCallback(async () => {
-    if (!state.smartRent) throw new Error('Contract not loaded');
-    return await state.smartRent.getPlatformStatistics();
-  }, [state.smartRent]);
+    // Если контракт не загружен, возвращаем mock данные
+    if (!state.smartRent || !state.isLoaded) {
+      console.warn('Contract not loaded, returning mock statistics');
+      return [0, 0, 0, 0]; // totalListings, totalRentals, totalDisputes, totalVolume
+    }
+    try {
+      return await state.smartRent.getPlatformStatistics();
+    } catch (error) {
+      console.error('Failed to fetch platform statistics:', error);
+      // Возвращаем пустые данные в случае ошибки
+      return [0, 0, 0, 0];
+    }
+  }, [state.smartRent, state.isLoaded]);
 
   const hasPremiumFeature = useCallback(async (user: string, feature: number) => {
     if (!state.smartRent) throw new Error('Contract not loaded');

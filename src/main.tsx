@@ -1,8 +1,7 @@
-// src/main.tsx или src/main.jsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './index.css'   // ← вот тут подключаем Tailwind CSS
+import './styles.css'  // Подключаем наши чистые CSS стили
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

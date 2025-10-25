@@ -53,7 +53,7 @@ export const SignPDFButton: React.FC<Props> = ({ rentalId, tenantName = 'Tenant'
   };
 
   return (
-    <button className="btn-primary" onClick={onSign}>Sign & Upload PDF</button>
+    <button className="btn btn-primary" onClick={onSign}>Sign & Upload PDF</button>
   );
 };
 
