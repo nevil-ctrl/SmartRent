@@ -1,36 +1,48 @@
 import { expect } from "chai";
-import { network } from "hardhat";
-
-const { ethers } = await network.connect();
+import { ethers } from "hardhat";
 
 describe("Counter", function () {
-  it("Should emit the Increment event when calling the inc() function", async function () {
-    const counter = await ethers.deployContract("Counter");
+  async function deployCounter() {
+    const [owner, otherAccount] = await ethers.getSigners();
 
-    await expect(counter.inc()).to.emit(counter, "Increment").withArgs(1n);
+    const Counter = await ethers.getContractFactory("Counter");
+    const counter = await Counter.deploy();
+
+    return { counter, owner, otherAccount };
+  }
+
+  describe("Deployment", function () {
+    it("Should set the right owner", async function () {
+      const { counter, owner } = await deployCounter();
+
+      expect(await counter.owner()).to.equal(owner.address);
+    });
+
+    it("Should deploy with the right initial value", async function () {
+      const { counter } = await deployCounter();
+
+      expect(await counter.number()).to.equal(0);
+    });
   });
 
-  it("The sum of the Increment events should match the current value", async function () {
-    const counter = await ethers.deployContract("Counter");
-    const deploymentBlockNumber = await ethers.provider.getBlockNumber();
+  describe("Increment", function () {
+    it("Should increment the number", async function () {
+      const { counter } = await deployCounter();
 
-    // run a series of increments
-    for (let i = 1; i <= 10; i++) {
-      await counter.incBy(i);
-    }
+      await counter.increment();
+      expect(await counter.number()).to.equal(1);
 
-    const events = await counter.queryFilter(
-      counter.filters.Increment(),
-      deploymentBlockNumber,
-      "latest",
-    );
+      await counter.increment();
+      expect(await counter.number()).to.equal(2);
+    });
+  });
 
-    // check that the aggregated events match the current value
-    let total = 0n;
-    for (const event of events) {
-      total += event.args.by;
-    }
+  describe("Set Number", function () {
+    it("Should set the number", async function () {
+      const { counter } = await deployCounter();
 
-    expect(await counter.x()).to.equal(total);
+      await counter.setNumber(42);
+      expect(await counter.number()).to.equal(42);
+    });
   });
 });
