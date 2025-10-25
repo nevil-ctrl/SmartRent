@@ -5,6 +5,8 @@ import { useWeb3 } from './useWeb3';
 // Contract ABIs (simplified for demo)
 const SMART_RENT_ABI = [
   'function createListing(string memory title, string memory description, uint256 pricePerDay, uint256 deposit, string memory ipfsHash) external',
+  'function getTotalListings() external view returns (uint256)',
+  'function getAllListings() external view returns (tuple(uint256 listingId, address landlord, string title, string description, uint256 pricePerDay, uint256 deposit, bool isActive, string ipfsHash, uint256 createdAt, uint256 updatedAt)[])',
   'function createRental(uint256 listingId, address landlord, uint256 deposit, uint256 totalRent, uint256 startDate, uint256 endDate) external',
   'function makeDeposit(uint256 rentalId) external payable',
   'function signContract(uint256 rentalId, string memory contractIpfsHash) external',
@@ -46,6 +48,8 @@ interface ContractActions {
   getPlatformStatistics: () => Promise<any>;
   hasPremiumFeature: (user: string, feature: number) => Promise<boolean>;
   getUserReputation: (user: string) => Promise<any>;
+  getAllListings: () => Promise<any[]>;
+  getUserListings: (address: string) => Promise<any[]>;
 }
 
 // Contract addresses (these should be updated after deployment)
@@ -259,6 +263,78 @@ export const useContracts = (): ContractState & ContractActions => {
     return await state.smartRent.getUserReputation(user);
   }, [state.smartRent]);
 
+  const getAllListings = useCallback(async () => {
+    if (!state.smartRent || !state.isLoaded) {
+      console.warn('Contract not loaded, returning empty listings');
+      return [];
+    }
+    try {
+      const totalListings = await state.smartRent.getTotalListings();
+      const listings = [];
+      
+      for (let i = 0; i < Number(totalListings); i++) {
+        try {
+          const listing = await state.smartRent.getListing(i);
+          listings.push({
+            listingId: Number(listing.listingId),
+            landlord: listing.landlord,
+            title: listing.title,
+            description: listing.description,
+            pricePerDay: ethers.formatEther(listing.pricePerDay),
+            deposit: ethers.formatEther(listing.deposit),
+            isActive: listing.isActive,
+            ipfsHash: listing.ipfsHash,
+            createdAt: Number(listing.createdAt),
+            updatedAt: Number(listing.updatedAt),
+          });
+        } catch (error) {
+          console.error(`Failed to fetch listing ${i}:`, error);
+        }
+      }
+      
+      return listings;
+    } catch (error) {
+      console.error('Failed to fetch all listings:', error);
+      return [];
+    }
+  }, [state.smartRent, state.isLoaded]);
+
+  const getUserListings = useCallback(async (address: string) => {
+    if (!state.smartRent || !state.isLoaded) {
+      console.warn('Contract not loaded, returning empty user listings');
+      return [];
+    }
+    try {
+      const listingIds = await state.smartRent.getUserListingHistory(address);
+      const listings = [];
+      
+      for (const id of listingIds) {
+        try {
+          const listing = await state.smartRent.getListing(Number(id));
+          listings.push({
+            listingId: Number(listing.listingId),
+            landlord: listing.landlord,
+            title: listing.title,
+            description: listing.description,
+            pricePerDay: ethers.formatEther(listing.pricePerDay),
+            deposit: ethers.formatEther(listing.deposit),
+            isActive: listing.isActive,
+            ipfsHash: listing.ipfsHash,
+            createdAt: Number(listing.createdAt),
+            updatedAt: Number(listing.updatedAt),
+          });
+        } catch (error) {
+          console.error(`Failed to fetch listing ${id}:`, error);
+        }
+      }
+      
+      return listings;
+    } catch (error) {
+      console.error('Failed to fetch user listings:', error);
+      return [];
+    }
+  }, [state.smartRent, state.isLoaded]);
+
   return {
     ...state,
     createListing,
@@ -274,5 +350,7 @@ export const useContracts = (): ContractState & ContractActions => {
     getPlatformStatistics,
     hasPremiumFeature,
     getUserReputation,
+    getAllListings,
+    getUserListings,
   };
 };

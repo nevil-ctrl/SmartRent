@@ -26,6 +26,8 @@ import { ListingCard } from './components/ListingCard';
 import { CreateListingModal } from './components/CreateListingModal';
 import { useWeb3 } from './hooks/useWeb3';
 import { useContracts } from './hooks/useContracts';
+import { BrowseListingsPage } from './pages/BrowseListingsPage';
+import { MyListingsPage } from './pages/MyListingsPage';
 
 // Mock data for demonstration
 const mockListings = [
@@ -174,9 +176,10 @@ const Navigation: React.FC = () => {
 // ========== HOME PAGE ==========
 const HomePage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [featuredListings, setFeaturedListings] = useState<any[]>(mockListings);
   const [, startTransition] = useTransition();
   const { isConnected } = useWeb3();
-  const { getPlatformStatistics } = useContracts();
+  const { getPlatformStatistics, getAllListings } = useContracts();
   const [stats, setStats] = useState({ 
     totalListings: 0, 
     totalRentals: 0, 
@@ -185,25 +188,43 @@ const HomePage: React.FC = () => {
   });
 
   useEffect(() => {
-    const loadStats = async () => {
-      try {
-        const statistics = await getPlatformStatistics();
-        startTransition(() => {
-          setStats({
-            totalListings: Number(statistics[0]),
-            totalRentals: Number(statistics[1]),
-            totalDisputes: Number(statistics[2]),
-            totalVolume: Number(statistics[3]) / 1e18, // Convert from wei to MATIC
-          });
-        });
-      } catch (error) {
-        console.error('Failed to load statistics:', error);
-        // Stats остаются в значении по умолчанию (0)
-      }
-    };
-
     loadStats();
-  }, [getPlatformStatistics]);
+    loadFeaturedListings();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      const statistics = await getPlatformStatistics();
+      startTransition(() => {
+        setStats({
+          totalListings: Number(statistics[0]),
+          totalRentals: Number(statistics[1]),
+          totalDisputes: Number(statistics[2]),
+          totalVolume: Number(statistics[3]) / 1e18, // Convert from wei to MATIC
+        });
+      });
+    } catch (error) {
+      console.error('Failed to load statistics:', error);
+      // Stats остаются в значении по умолчанию (0)
+    }
+  };
+
+  const loadFeaturedListings = async () => {
+    try {
+      const allListings = await getAllListings();
+      // Show only active listings, max 3 for homepage
+      const activeListings = allListings.filter(l => l.isActive).slice(0, 3);
+      
+      if (activeListings.length > 0) {
+        startTransition(() => {
+          setFeaturedListings(activeListings);
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load featured listings:', error);
+      // Keep mock listings as fallback
+    }
+  };
 
   const handleViewDetails = (listingId: number) => {
     console.log('View details for listing:', listingId);
@@ -223,6 +244,14 @@ const HomePage: React.FC = () => {
     startTransition(() => {
       setIsCreateModalOpen(false);
     });
+  };
+
+  const handleListingCreated = async () => {
+    console.log('Listing created successfully');
+    handleCloseModal();
+    // Reload statistics and featured listings
+    await loadStats();
+    await loadFeaturedListings();
   };
 
   return (
@@ -442,7 +471,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-3">
-            {mockListings.map((listing) => (
+            {featuredListings.map((listing) => (
               <ListingCard
                 key={listing.listingId}
                 listing={listing}
@@ -536,10 +565,7 @@ const HomePage: React.FC = () => {
       <CreateListingModal
         isOpen={isCreateModalOpen}
         onClose={handleCloseModal}
-        onSuccess={() => {
-          console.log('Listing created successfully');
-          handleCloseModal();
-        }}
+        onSuccess={handleListingCreated}
       />
     </>
   );
@@ -668,8 +694,8 @@ const App: React.FC = () => {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/listings" element={<PlaceholderPage title="Browse Listings" />} />
-          <Route path="/my-listings" element={<PlaceholderPage title="My Listings" />} />
+          <Route path="/listings" element={<BrowseListingsPage />} />
+          <Route path="/my-listings" element={<MyListingsPage />} />
           <Route path="/rentals" element={<PlaceholderPage title="My Rentals" />} />
           <Route path="/disputes" element={<PlaceholderPage title="Disputes" />} />
           <Route path="/reputation" element={<PlaceholderPage title="Reputation" />} />
