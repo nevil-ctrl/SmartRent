@@ -87,8 +87,31 @@ export const RentalApplicationModal: React.FC<RentalApplicationModalProps> = ({
     setError(null);
 
     try {
-      const startTimestamp = Math.floor(new Date(formData.startDate).getTime() / 1000);
-      const endTimestamp = Math.floor(new Date(formData.endDate).getTime() / 1000);
+      // Конвертируем даты в timestamp (в секундах, не миллисекундах)
+      // Используем Date.UTC чтобы избежать проблем с часовыми поясами
+      const startDate = new Date(formData.startDate + 'T00:00:00Z');
+      const endDate = new Date(formData.endDate + 'T23:59:59Z');
+      
+      const startTimestamp = Math.floor(startDate.getTime() / 1000);
+      const endTimestamp = Math.floor(endDate.getTime() / 1000);
+      
+      // Добавляем проверку, что даты корректны
+      const now = Math.floor(Date.now() / 1000);
+      if (startTimestamp <= now) {
+        throw new Error('Дата начала аренды должна быть в будущем. Пожалуйста, выберите дату не ранее завтрашнего дня.');
+      }
+      
+      if (endTimestamp <= startTimestamp) {
+        throw new Error('Дата окончания должна быть позже даты начала');
+      }
+      
+      console.log('📅 Создание аренды с датами:', {
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        startTimestamp,
+        endTimestamp,
+        currentTimestamp: now
+      });
 
       // Создаем запись аренды в контракте
       await createRental(
@@ -190,9 +213,10 @@ export const RentalApplicationModal: React.FC<RentalApplicationModalProps> = ({
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleChange}
-                    min={new Date().toISOString().split('T')[0]}
+                    min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
                     className="form-input"
                     required
+                    title="Выберите дату начала аренды (не ранее завтрашнего дня)"
                   />
                 </div>
                 <div style={{ flex: 1 }}>

@@ -35,39 +35,44 @@
   }
 }
 
-/* === ЦВЕТОВАЯ ПАЛИТРА (Stepik Style) === */
+/* === ЦВЕТОВАЯ ПАЛИТРА (Stepik Teach Style - точная копия) === */
 :root {
-  /* Основные цвета - в стиле Stepik */
-  --color-primary: #5856d6; /* Яркий фиолетовый */
-  --color-primary-light: #8b89ff; /* Светлый фиолетовый */
-  --color-primary-dark: #3d3ba8; /* Темный фиолетовый */
+  /* Основные градиентные цвета Stepik */
+  --color-primary: #7c3aed; /* Фиолетовый Stepik */
+  --color-primary-light: #c084fc; /* Светлый фиолетовый */
+  --color-primary-dark: #5b21b6; /* Темный фиолетовый */
+  --color-primary-bg: #e6d5ff; /* Пастельный фиолетовый фон */
 
-  --color-accent: #00c9a7; /* Бирюзовый акцент */
-  --color-accent-light: #5fffd4; /* Светлый бирюзовый */
+  --color-accent: #10b981; /* Зеленый акцент */
+  --color-accent-light: #6ee7b7; /* Светлый зеленый */
+  --color-accent-bg: #d4f5e9; /* Пастельный зеленый фон */
 
   /* Вторичные цвета */
-  --color-secondary: #00d9ac; /* Зеленый - успех */
+  --color-secondary: #10b981; /* Зеленый - успех */
   --color-secondary-light: #d1fae5; /* Светлый зеленый */
-  --color-success: #00d9ac; /* Зеленый - успех */
-  --color-success-light: #d4fff0; /* Светло-зеленый для фона */
-  --color-warning: #ffb800; /* Оранжевый - предупреждение */
-  --color-warning-light: #fff5d9; /* Светлый оранжевый */
-  --color-danger: #ff4757; /* Красный - ошибка */
-  --color-danger-light: #ffe8eb; /* Светлый красный */
-  --color-info: #5856d6; /* Фиолетовый - информация */
-  --color-info-light: #ebeaff; /* Светло-фиолетовый для фона */
+  --color-success: #10b981; /* Зеленый - успех */
+  --color-success-light: #d4f5e9; /* Светло-зеленый для фона */
+  
+  --color-warning: #fbbf24; /* Желтый - предупреждение */
+  --color-warning-light: #fef3c7; /* Светлый желтый */
+  --color-warning-bg: #fff4cc; /* Пастельный желтый фон */
+  
+  --color-danger: #ef4444; /* Красный - ошибка */
+  --color-danger-light: #fee2e2; /* Светлый красный */
+  --color-info: #7c3aed; /* Фиолетовый - информация */
+  --color-info-light: #e6d5ff; /* Светло-фиолетовый для фона */
 
-  /* Нейтральные цвета */
-  --color-text-primary: #222222; /* Темно-серый текст */
-  --color-text-secondary: #666666; /* Средне-серый текст */
-  --color-text-muted: #999999; /* Светло-серый текст */
+  /* Нейтральные цвета - как у Stepik */
+  --color-text-primary: #000000; /* Черный текст */
+  --color-text-secondary: #4b5563; /* Серый текст */
+  --color-text-muted: #9ca3af; /* Светло-серый текст */
 
   --color-bg-primary: #ffffff; /* Белый фон */
-  --color-bg-secondary: #fafbfc; /* Очень светло-серый фон */
-  --color-bg-tertiary: #f5f6f8; /* Светло-серый фон */
+  --color-bg-secondary: #f9fafb; /* Очень светло-серый фон */
+  --color-bg-tertiary: #f3f4f6; /* Светло-серый фон */
 
-  --color-border: #e8e9eb; /* Цвет границ */
-  --color-border-hover: #d4d6d9; /* Цвет границ при наведении */
+  --color-border: #e5e7eb; /* Цвет границ */
+  --color-border-hover: #d1d5db; /* Цвет границ при наведении */
 
   /* Тени */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -78,11 +83,12 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-  /* Радиусы скругления */
-  --radius-sm: 0.375rem; /* 6px */
-  --radius-md: 0.5rem; /* 8px */
-  --radius-lg: 0.75rem; /* 12px */
-  --radius-xl: 1rem; /* 16px */
+  /* Радиусы скругления - больше как у Stepik */
+  --radius-sm: 0.5rem; /* 8px */
+  --radius-md: 0.75rem; /* 12px */
+  --radius-lg: 1.25rem; /* 20px */
+  --radius-xl: 1.75rem; /* 28px */
+  --radius-2xl: 2.5rem; /* 40px */
   --radius-full: 9999px;
 
   /* Размеры шрифтов */
@@ -135,7 +141,7 @@ body {
   font-size: var(--font-size-base);
   line-height: 1.6;
   color: var(--color-text-primary);
-  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 50%, #fafbfc 100%);
+  background: #fafbfc;
   min-height: 100vh;
 }
 
@@ -356,14 +362,14 @@ a:focus {
   flex-direction: column;
 }
 
-/* === HERO SECTION (Stepik Style) === */
+/* === HERO SECTION (Stepik Teach Style - строгий) === */
 .hero {
-  background: linear-gradient(135deg, #5856d6 0%, #00c9a7 100%);
-  color: white;
-  padding: calc(var(--spacing-3xl) + 3rem) 0 var(--spacing-3xl);
+  background: linear-gradient(90deg, #e6e6fa 0%, #e8d5e8 40%, #eeeeee 70%, #e6e6fa 100%);
+  color: #000000;
+  padding: calc(var(--spacing-3xl) + 2rem) 0 calc(var(--spacing-3xl) + 2rem);
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hero::before {
@@ -404,25 +410,25 @@ a:focus {
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: var(--spacing-lg);
-  color: white;
-  animation: fadeInUp 0.8s ease-out;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  margin-bottom: var(--spacing-md);
+  color: #000000;
+  animation: fadeInUp 0.6s ease-out;
+  text-shadow: none;
+  line-height: 1.1;
+  letter-spacing: 0;
 }
 
 .hero-subtitle {
-  font-size: 1.375rem;
+  font-size: 1.125rem;
   margin-bottom: var(--spacing-2xl);
-  color: rgba(255, 255, 255, 0.95);
-  max-width: 680px;
+  color: #717171;
+  max-width: 560px;
   margin-left: auto;
   margin-right: auto;
-  animation: fadeInUp 0.8s ease-out 0.2s both;
-  line-height: 1.6;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+  line-height: 1.4;
   font-weight: 400;
 }
 
@@ -479,19 +485,19 @@ a:focus {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-/* === CARD === */
+/* === CARD (Stepik Style - скругленные и с тенью) === */
 .card {
   background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: all var(--transition-base);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
 }
 
 .card-header {
@@ -547,37 +553,33 @@ a:focus {
   height: 20px;
 }
 
-/* Button Variants - Stepik Style */
+/* Button Variants - Stepik Teach Style (черные кнопки) */
 .btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-primary-light) 100%
-  );
+  background: #000000;
   color: white;
-  box-shadow: 0 4px 12px rgba(88, 86, 214, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   font-weight: 600;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-xl);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-dark) 0%,
-    var(--color-primary) 100%
-  );
+  background: #1f2937;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(88, 86, 214, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   text-decoration: none;
 }
 
 .btn-secondary {
-  background-color: var(--color-bg-tertiary);
-  color: var(--color-text-primary);
+  background-color: white;
+  color: #000000;
   font-weight: 600;
+  border: 1px solid #e5e7eb;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--color-border-hover);
+  background-color: #f9fafb;
+  border-color: #d1d5db;
   transform: translateY(-1px);
   text-decoration: none;
 }
@@ -597,18 +599,18 @@ a:focus {
 }
 
 .btn-outline-light {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: #000000;
   color: white;
-  border: 2px solid white;
-  backdrop-filter: blur(10px);
+  border: 1px solid #4b4b4b;
   font-weight: 600;
 }
 
 .btn-outline-light:hover:not(:disabled) {
-  background-color: white;
-  color: var(--color-primary);
+  background-color: #7c3aed;
+  border-color: #6432dd;
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
   text-decoration: none;
 }
 
@@ -797,41 +799,20 @@ a:focus {
   font-weight: 500;
 }
 
-/* === PROPERTY LISTING CARD (Stepik Style) === */
+/* === PROPERTY LISTING CARD (Stepik Teach Style - скругленные карточки) === */
 .listing-card {
   background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
+  border: none;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-}
-
-.listing-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(88, 86, 214, 0.03) 0%,
-    rgba(0, 201, 167, 0.03) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .listing-card:hover {
-  box-shadow: 0 20px 50px rgba(88, 86, 214, 0.15);
-  transform: translateY(-8px);
-  border-color: var(--color-primary-light);
-}
-
-.listing-card:hover::after {
-  opacity: 1;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
 }
 
 .listing-image {
@@ -1134,9 +1115,9 @@ a:focus {
   border-top: 1px solid var(--color-border);
 }
 
-/* === FOOTER (Stepik Style) === */
+/* === FOOTER (Stepik Teach Style - светлее) === */
 .app-footer {
-  background: #1a1d29;
+  background: #1f2937;
   color: rgba(255, 255, 255, 0.85);
   padding: var(--spacing-3xl) 0 var(--spacing-lg);
   margin-top: auto;
@@ -1368,20 +1349,21 @@ a:focus {
   margin-bottom: 0;
 }
 
-/* === FEATURES SECTION === */
+/* === FEATURES SECTION (Stepik Style - цветные карточки) === */
 .features-section {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
 }
 
 .feature-card {
   background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
+  border: none;
   border-radius: var(--radius-xl);
-  padding: var(--spacing-xl);
-  text-align: center;
+  padding: calc(var(--spacing-xl) + 0.5rem);
+  text-align: left;
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .feature-card::before {
@@ -1405,72 +1387,73 @@ a:focus {
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
 .feature-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-xl);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto var(--spacing-lg);
-  color: white;
+  margin: 0 0 var(--spacing-lg) 0;
   position: relative;
   z-index: 1;
+  box-shadow: none;
 }
 
 .feature-icon svg {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   position: relative;
   z-index: 2;
 }
 
+/* Пастельные фоны как у Stepik Teach */
 .gradient-blue {
-  background: linear-gradient(135deg, #5856d6 0%, #8b89ff 100%);
-  box-shadow: 0 10px 30px rgba(88, 86, 214, 0.2);
+  background: var(--color-primary-bg);
+  box-shadow: none;
 }
 
 .gradient-green {
-  background: linear-gradient(135deg, #00d9ac 0%, #00c9a7 100%);
-  box-shadow: 0 10px 30px rgba(0, 217, 172, 0.2);
+  background: var(--color-accent-bg);
+  box-shadow: none;
 }
 
 .gradient-purple {
-  background: linear-gradient(135deg, #8b89ff 0%, #5856d6 100%);
-  box-shadow: 0 10px 30px rgba(139, 137, 255, 0.2);
+  background: #f3e8ff;
+  box-shadow: none;
 }
 
 .gradient-orange {
-  background: linear-gradient(135deg, #ffb800 0%, #ff9500 100%);
-  box-shadow: 0 10px 30px rgba(255, 184, 0, 0.2);
+  background: var(--color-warning-bg);
+  box-shadow: none;
 }
 
 .gradient-pink {
-  background: linear-gradient(135deg, #ff4757 0%, #ff6b6b 100%);
-  box-shadow: 0 10px 30px rgba(255, 71, 87, 0.2);
+  background: #fce7f3;
+  box-shadow: none;
 }
 
 .gradient-teal {
-  background: linear-gradient(135deg, #00c9a7 0%, #5fffd4 100%);
-  box-shadow: 0 10px 30px rgba(0, 201, 167, 0.2);
+  background: #d1fae5;
+  box-shadow: none;
 }
 
 .feature-title {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
+  line-height: 1.3;
 }
 
 .feature-description {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: 1.5;
   margin: 0;
 }
 
@@ -1493,7 +1476,7 @@ a:focus {
 
 .step-card {
   background-color: var(--color-bg-primary);
-  border: 2px solid var(--color-border);
+  border: none;
   border-radius: var(--radius-xl);
   padding: var(--spacing-xl);
   text-align: center;
@@ -1502,26 +1485,23 @@ a:focus {
   max-width: 280px;
   position: relative;
   transition: all var(--transition-base);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .step-card:hover {
-  border-color: var(--color-primary);
-  transform: scale(1.05);
-  box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
+/* Строгие круглые бейджи */
 .step-number {
   position: absolute;
-  top: -20px;
+  top: -24px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-primary-light)
-  );
+  width: 48px;
+  height: 48px;
+  background: #000000;
   color: white;
   border-radius: var(--radius-full);
   display: flex;
@@ -1529,7 +1509,7 @@ a:focus {
   justify-content: center;
   font-weight: 700;
   font-size: var(--font-size-lg);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .step-content {
@@ -1537,20 +1517,7 @@ a:focus {
 }
 
 .step-icon {
-  width: 60px;
-  height: 60px;
-  background-color: rgba(79, 70, 229, 0.1);
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto var(--spacing-md);
-  color: var(--color-primary);
-}
-
-.step-icon svg {
-  width: 30px;
-  height: 30px;
+  display: none;
 }
 
 .step-title {
@@ -1628,12 +1595,14 @@ a:focus {
   margin: 0;
 }
 
-/* === CTA SECTION (Stepik Style) === */
+/* === CTA SECTION (Stepik Teach Style) === */
 .cta-section {
   padding: calc(var(--spacing-3xl) + 2rem) 0;
-  background: linear-gradient(135deg, #5856d6 0%, #00c9a7 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #c084fc 50%, #10b981 100%);
   position: relative;
   overflow: hidden;
+  border-radius: var(--radius-2xl);
+  margin: var(--spacing-2xl) 0;
 }
 
 .cta-section::before {
@@ -1699,28 +1668,31 @@ a:focus {
 
 .cta-actions .btn {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  font-size: var(--font-size-lg);
+  padding: var(--spacing-md) calc(var(--spacing-xl) + 0.5rem);
 }
 
 .cta-actions .btn-primary {
-  background-color: white;
-  color: var(--color-primary);
+  background-color: #000000;
+  color: white;
 }
 
 .cta-actions .btn-primary:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.95);
-  transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  background-color: #1f2937;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
 .cta-actions .btn-secondary {
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
+  background-color: white;
+  color: #000000;
+  border: none;
 }
 
 .cta-actions .btn-secondary:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
 }
 
 /* === АДАПТИВНОСТЬ === */

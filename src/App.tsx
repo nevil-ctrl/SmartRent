@@ -26,13 +26,16 @@ import { ListingCard } from './components/ListingCard';
 import { CreateListingModal } from './components/CreateListingModal';
 import { NetworkWarning } from './components/NetworkWarning';
 import { ActiveContractsSection } from './components/ActiveContractsSection';
+import { MockContractsSection } from './components/MockContractsSection';
 import { RentalApplicationModal } from './components/RentalApplicationModal';
 import { ListingDetailsModal } from './components/ListingDetailsModal';
 import { useWeb3 } from './hooks/useWeb3';
 import { useContracts } from './hooks/useContracts';
 import { BrowseListingsPage } from './pages/BrowseListingsPage';
 import { MyListingsPage } from './pages/MyListingsPage';
+import { MyRentalsPage } from './pages/MyRentalsPage';
 import { ReputationPage } from './pages/ReputationPage';
+import { SubscriptionPage } from './pages/SubscriptionPage';
 
 // Mock data for demonstration
 const mockListings = [
@@ -107,7 +110,7 @@ const Navigation: React.FC = () => {
     { path: '/listings', label: 'Browse', icon: Search },
     { path: '/my-listings', label: 'My Listings', icon: User },
     { path: '/rentals', label: 'My Rentals', icon: FileText },
-    { path: '/disputes', label: 'Disputes', icon: Shield },
+    { path: '/subscription', label: 'Subscription', icon: Zap },
     { path: '/reputation', label: 'Reputation', icon: Star },
   ];
 
@@ -318,10 +321,39 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1 className="hero-title">Decentralized Property Rental</h1>
+          <h1 className="hero-title">Зарабатывайте на сдаче<br/>недвижимости в аренду</h1>
           <p className="hero-subtitle">
-            Rent properties securely on Polygon with smart contracts and IPFS storage
+            С крупнейшей децентрализованной платформой аренды на блокчейне Polygon
           </p>
+          
+          {/* Галочки преимуществ */}
+          <div style={{
+            display: 'flex',
+            gap: 'var(--spacing-xl)',
+            justifyContent: 'center',
+            marginBottom: 'var(--spacing-xl)',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+              <CheckCircle size={18} color="#10b981" />
+              <span style={{ fontSize: 'var(--font-size-sm)', color: '#000000', fontWeight: 500 }}>
+                Умные контракты
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+              <CheckCircle size={18} color="#10b981" />
+              <span style={{ fontSize: 'var(--font-size-sm)', color: '#000000', fontWeight: 500 }}>
+                Гарантия безопасности
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+              <CheckCircle size={18} color="#10b981" />
+              <span style={{ fontSize: 'var(--font-size-sm)', color: '#000000', fontWeight: 500 }}>
+                Низкая комиссия 2%
+              </span>
+            </div>
+          </div>
+
           <div className="hero-actions">
             <button
               onClick={handleOpenModal}
@@ -329,11 +361,11 @@ const HomePage: React.FC = () => {
               className="btn btn-outline-light btn-lg"
             >
               <Plus />
-              List Your Property
+              Разместить объявление
             </button>
-            <Link to="/listings" className="btn btn-outline-light btn-lg">
+            <Link to="/listings" className="btn btn-secondary btn-lg">
               <Search />
-              Browse Properties
+              Найти недвижимость
             </Link>
           </div>
         </div>
@@ -343,21 +375,21 @@ const HomePage: React.FC = () => {
       <section className="section">
         <div className="container">
           <div className="grid grid-cols-4">
-            <div className="card stats-card">
+            <div className="card stats-card" style={{ backgroundColor: 'var(--color-primary-bg)', border: 'none' }}>
               <div className="stats-value primary">{stats.totalListings}</div>
-              <div className="stats-label">Active Listings</div>
+              <div className="stats-label">Активных объявлений</div>
             </div>
-            <div className="card stats-card">
+            <div className="card stats-card" style={{ backgroundColor: 'var(--color-accent-bg)', border: 'none' }}>
               <div className="stats-value success">{stats.totalRentals}</div>
-              <div className="stats-label">Total Rentals</div>
+              <div className="stats-label">Всего сделок</div>
             </div>
-            <div className="card stats-card">
+            <div className="card stats-card" style={{ backgroundColor: 'var(--color-warning-bg)', border: 'none' }}>
               <div className="stats-value warning">{stats.totalDisputes}</div>
-              <div className="stats-label">Total Disputes</div>
+              <div className="stats-label">Споров</div>
             </div>
-            <div className="card stats-card">
-              <div className="stats-value primary">{stats.totalVolume.toFixed(2)}</div>
-              <div className="stats-label">Volume (MATIC)</div>
+            <div className="card stats-card" style={{ backgroundColor: '#f3e8ff', border: 'none' }}>
+              <div className="stats-value" style={{ color: '#9333ea' }}>{stats.totalVolume.toFixed(2)}</div>
+              <div className="stats-label">Объём (MATIC)</div>
             </div>
           </div>
         </div>
@@ -367,76 +399,78 @@ const HomePage: React.FC = () => {
       <section className="section features-section">
         <div className="container">
           <div className="text-center mb-8">
-            <h2 className="section-title">Почему выбирают Kreda.io</h2>
+            <h2 className="section-title" style={{ fontSize: '3rem', fontWeight: 800 }}>
+              Почему выбирают SmartRent
+            </h2>
             <p className="section-subtitle">
               Современная платформа для безопасной аренды недвижимости на блокчейне
             </p>
           </div>
 
           <div className="grid grid-cols-3">
-            <div className="feature-card">
-              <div className="feature-icon gradient-blue">
-                <Lock />
+            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+              <div className="feature-icon" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+                <Lock color="var(--color-primary)" />
               </div>
-              <h3 className="feature-title">Безопасность</h3>
+              <h3 className="feature-title">Гарантия безопасности</h3>
               <p className="feature-description">
                 Все сделки защищены смарт-контрактами на блокчейне Polygon. 
-                Ваши средства в безопасности.
+                Ваши средства в безопасности благодаря технологии Escrow.
               </p>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon gradient-green">
-                <Zap />
+            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+              <div className="feature-icon" style={{ backgroundColor: 'var(--color-accent-bg)' }}>
+                <Users color="var(--color-accent)" />
               </div>
-              <h3 className="feature-title">Мгновенно</h3>
+              <h3 className="feature-title">Растущая аудитория</h3>
               <p className="feature-description">
-                Быстрые транзакции без посредников. Заключайте сделки 
-                за считанные минуты.
+                Доступ к тысячам потенциальных арендаторов. 
+                Ваши объявления видят пользователи из разных стран.
               </p>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon gradient-purple">
-                <Globe />
+            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+              <div className="feature-icon" style={{ backgroundColor: '#f3e8ff' }}>
+                <DollarSign color="#9333ea" />
               </div>
-              <h3 className="feature-title">Глобально</h3>
+              <h3 className="feature-title">Прозрачные выплаты</h3>
               <p className="feature-description">
-                Арендуйте недвижимость в любой точке мира. Без границ 
-                и валютных ограничений.
+                Автоматические выплаты через смарт-контракты. 
+                Комиссия всего 2%, без скрытых платежей.
               </p>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon gradient-orange">
-                <DollarSign />
+            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+              <div className="feature-icon" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
+                <Shield color="var(--color-warning)" />
               </div>
-              <h3 className="feature-title">Низкие комиссии</h3>
+              <h3 className="feature-title">Защита от споров</h3>
               <p className="feature-description">
-                Минимальные комиссии благодаря технологии блокчейн. 
-                Экономьте на каждой сделке.
+                Встроенная система арбитража для решения конфликтных ситуаций. 
+                Справедливое разрешение споров.
               </p>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon gradient-pink">
-                <Shield />
+            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+              <div className="feature-icon" style={{ backgroundColor: '#fce7f3' }}>
+                <Award color="#ec4899" />
               </div>
-              <h3 className="feature-title">Защита прав</h3>
+              <h3 className="feature-title">Репутационная система</h3>
               <p className="feature-description">
-                Система арбитража защищает права арендаторов и арендодателей. 
-                Справедливое решение споров.
+                Система оценок и отзывов на блокчейне. 
+                Выбирайте проверенных партнёров для сделок.
               </p>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon gradient-teal">
-                <Award />
+            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+              <div className="feature-icon" style={{ backgroundColor: '#d1fae5' }}>
+                <TrendingUp color="#059669" />
               </div>
-              <h3 className="feature-title">Репутация</h3>
+              <h3 className="feature-title">Аналитика доходов</h3>
               <p className="feature-description">
-                Система репутации помогает выбрать надежных партнеров 
-                для аренды.
+                Отслеживайте доходность ваших объектов. 
+                Расширенная статистика для Pro и Premium подписчиков.
               </p>
             </div>
           </div>
@@ -447,71 +481,61 @@ const HomePage: React.FC = () => {
       <section className="section how-it-works-section">
         <div className="container">
           <div className="text-center mb-8">
-            <h2 className="section-title">Как это работает</h2>
+            <h2 className="section-title" style={{ fontSize: '3rem', fontWeight: 800 }}>
+              Как это работает
+            </h2>
             <p className="section-subtitle">
               Четыре простых шага до заключения сделки
             </p>
           </div>
 
           <div className="steps-container">
-            <div className="step-card">
+            <div className="step-card" style={{ backgroundColor: 'white' }}>
               <div className="step-number">1</div>
               <div className="step-content">
-                <div className="step-icon">
-                  <User />
-                </div>
-                <h3 className="step-title">Подключите кошелек</h3>
+                <h3 className="step-title">Подключите кошелёк</h3>
                 <p className="step-description">
-                  Подключите MetaMask или другой Web3 кошелек 
-                  к платформе Kreda.io
+                  Подключите MetaMask или другой Web3 кошелёк 
+                  к платформе SmartRent для безопасной работы
                 </p>
               </div>
             </div>
 
             <div className="step-arrow">→</div>
 
-            <div className="step-card">
+            <div className="step-card" style={{ backgroundColor: 'white' }}>
               <div className="step-number">2</div>
               <div className="step-content">
-                <div className="step-icon">
-                  <Search />
-                </div>
-                <h3 className="step-title">Найдите объект</h3>
+                <h3 className="step-title">Разместите объявление</h3>
                 <p className="step-description">
-                  Выберите недвижимость из каталога или разместите 
-                  свое объявление
+                  Создайте объявление с фотографиями, описанием 
+                  и условиями аренды вашей недвижимости
                 </p>
               </div>
             </div>
 
             <div className="step-arrow">→</div>
 
-            <div className="step-card">
+            <div className="step-card" style={{ backgroundColor: 'white' }}>
               <div className="step-number">3</div>
               <div className="step-content">
-                <div className="step-icon">
-                  <CheckCircle />
-                </div>
-                <h3 className="step-title">Заключите сделку</h3>
+                <h3 className="step-title">Получайте отклики</h3>
                 <p className="step-description">
-                  Смарт-контракт автоматически создается и 
-                  фиксирует условия аренды
+                  Арендаторы подают заявки на вашу недвижимость. 
+                  Выберите подходящего кандидата
                 </p>
               </div>
             </div>
 
             <div className="step-arrow">→</div>
 
-            <div className="step-card">
+            <div className="step-card" style={{ backgroundColor: 'white' }}>
               <div className="step-number">4</div>
               <div className="step-content">
-                <div className="step-icon">
-                  <Star />
-                </div>
-                <h3 className="step-title">Оставьте отзыв</h3>
+                <h3 className="step-title">Заключите сделку</h3>
                 <p className="step-description">
-                  После завершения аренды оцените опыт и 
-                  получите репутационные баллы
+                  Смарт-контракт автоматически фиксирует условия, 
+                  защищает депозит и выплаты
                 </p>
               </div>
             </div>
@@ -524,7 +548,9 @@ const HomePage: React.FC = () => {
         <div className="container">
           <div className="section-header">
             <div>
-              <h2 className="section-title">Популярные предложения</h2>
+              <h2 className="section-title" style={{ fontSize: '2.5rem', fontWeight: 800 }}>
+                Популярные предложения
+              </h2>
               {isConnected && contractsLoaded && (
                 <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
                   {isLoadingListings ? '🔄 Загрузка из блокчейна...' : '✅ Данные из смарт-контрактов'}
@@ -582,8 +608,8 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Active Contracts Section */}
-      <ActiveContractsSection />
+      {/* Active Contracts Section - всегда показываем демо данные */}
+      <MockContractsSection />
 
       {/* Benefits Section */}
       <section className="section benefits-section">
@@ -595,7 +621,7 @@ const HomePage: React.FC = () => {
                 <h3 className="benefit-title">Растущее сообщество</h3>
                 <p className="benefit-description">
                   Присоединяйтесь к тысячам пользователей, которые уже 
-                  используют Kreda.io для аренды
+                  используют SmartRent для аренды
                 </p>
               </div>
             </div>
@@ -823,8 +849,8 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/listings" element={<BrowseListingsPage />} />
           <Route path="/my-listings" element={<MyListingsPage />} />
-          <Route path="/rentals" element={<PlaceholderPage title="My Rentals" />} />
-          <Route path="/disputes" element={<PlaceholderPage title="Disputes" />} />
+          <Route path="/rentals" element={<MyRentalsPage />} />
+          <Route path="/subscription" element={<SubscriptionPage />} />
           <Route path="/reputation" element={<ReputationPage />} />
         </Routes>
       </main>
