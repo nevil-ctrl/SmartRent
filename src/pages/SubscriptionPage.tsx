@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, X, Zap, Star, Award, TrendingUp, Crown, Shield } from 'lucide-react';
+import { Check, Zap, Star, Award, TrendingUp, Crown, Shield } from 'lucide-react';
 import { useWeb3 } from '../hooks/useWeb3';
 import { useContracts } from '../hooks/useContracts';
 

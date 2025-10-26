@@ -13,7 +13,6 @@ import {
   CheckCircle,
   Lock,
   Zap,
-  Globe,
   Users,
   TrendingUp,
   Award,
@@ -25,7 +24,6 @@ import { WalletButton } from './components/WalletButton';
 import { ListingCard } from './components/ListingCard';
 import { CreateListingModal } from './components/CreateListingModal';
 import { NetworkWarning } from './components/NetworkWarning';
-import { ActiveContractsSection } from './components/ActiveContractsSection';
 import { MockContractsSection } from './components/MockContractsSection';
 import { RentalApplicationModal } from './components/RentalApplicationModal';
 import { ListingDetailsModal } from './components/ListingDetailsModal';
@@ -714,20 +712,6 @@ const HomePage: React.FC = () => {
         listing={selectedListingForDetails}
       />
     </>
-  );
-};
-
-// ========== PLACEHOLDER PAGES ==========
-const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => {
-  return (
-    <section className="section">
-      <div className="container">
-        <div className="text-center">
-          <h2>{title}</h2>
-          <p style={{ color: 'var(--color-text-secondary)' }}>Coming Soon</p>
-        </div>
-      </div>
-    </section>
   );
 };
 

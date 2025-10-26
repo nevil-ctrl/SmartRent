@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Calendar, User, DollarSign, Download, CheckCircle, Clock, AlertCircle, XCircle } from 'lucide-react';
+import { FileText, Calendar, User, Download, CheckCircle, Clock, AlertCircle, XCircle } from 'lucide-react';
 import { useWeb3 } from '../hooks/useWeb3';
 
 interface Rental {
@@ -84,7 +84,7 @@ const MOCK_RENTALS: Rental[] = [
 
 export const MyRentalsPage: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'active' | 'completed' | 'pending'>('all');
-  const { account, isConnected } = useWeb3();
+  const { isConnected } = useWeb3();
 
   const getStatusConfig = (status: Rental['status']) => {
     switch (status) {

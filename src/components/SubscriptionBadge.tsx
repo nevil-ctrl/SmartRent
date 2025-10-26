@@ -1,5 +1,5 @@
 import React from 'react';
-import { Crown, Star, Shield } from 'lucide-react';
+import { Crown, Star } from 'lucide-react';
 
 interface SubscriptionBadgeProps {
   plan: 'free' | 'pro' | 'premium';
