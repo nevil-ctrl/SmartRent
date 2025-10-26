@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FileText, Calendar, User, DollarSign, Eye, MessageSquare, Clock } from 'lucide-react';
 import { useWeb3 } from '../hooks/useWeb3';
 import './ActiveContractsSection.css';
@@ -65,8 +65,8 @@ const MOCK_CONTRACTS: Rental[] = [
 ];
 
 export const ActiveContractsSection: React.FC = () => {
-  const [activeContracts, setActiveContracts] = useState<Rental[]>(MOCK_CONTRACTS);
-  const [isLoading, setIsLoading] = useState(false);
+  const [activeContracts] = useState<Rental[]>(MOCK_CONTRACTS);
+  const [isLoading] = useState(false);
   const [selectedContract, setSelectedContract] = useState<Rental | null>(null);
   const { account } = useWeb3();
 
@@ -106,7 +106,11 @@ export const ActiveContractsSection: React.FC = () => {
   };
 
   return (
-    <section className="section" style={{ background: 'var(--color-bg-secondary)' }}>
+    <section className="section" style={{ 
+      background: '#f0f9ff',
+      padding: '60px 0',
+      minHeight: '600px'
+    }}>
       <div className="container">
         <div className="section-header">
           <div>

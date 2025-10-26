@@ -183,9 +183,10 @@ const HomePage: React.FC = () => {
   const [isRentalModalOpen, setIsRentalModalOpen] = useState(false);
   const [selectedListingForRent, setSelectedListingForRent] = useState<any>(null);
   const [featuredListings, setFeaturedListings] = useState<any[]>(mockListings);
+  const [isLoadingListings, setIsLoadingListings] = useState(false);
   const [, startTransition] = useTransition();
-  const { isConnected } = useWeb3();
-  const { getPlatformStatistics, getAllListings } = useContracts();
+  const { isConnected, account } = useWeb3();
+  const { getPlatformStatistics, getAllListings, isLoaded: contractsLoaded } = useContracts();
   const [stats, setStats] = useState({ 
     totalListings: 0, 
     totalRentals: 0, 
@@ -193,10 +194,14 @@ const HomePage: React.FC = () => {
     totalVolume: 0 
   });
 
+  // Загружаем статистику и листинги при подключении
   useEffect(() => {
-    loadStats();
-    loadFeaturedListings();
-  }, []);
+    if (contractsLoaded && isConnected) {
+      console.log('🔄 Contracts loaded, fetching data...');
+      loadStats();
+      loadFeaturedListings();
+    }
+  }, [contractsLoaded, isConnected, account]);
 
   const loadStats = async () => {
     try {
@@ -224,19 +229,35 @@ const HomePage: React.FC = () => {
   };
 
   const loadFeaturedListings = async () => {
+    console.log('📋 Loading featured listings from blockchain...');
+    setIsLoadingListings(true);
     try {
       const allListings = await getAllListings();
+      console.log('✅ Loaded listings:', allListings.length);
+      
       // Show only active listings, max 3 for homepage
       const activeListings = allListings.filter(l => l.isActive).slice(0, 3);
       
       if (activeListings.length > 0) {
+        console.log('📌 Setting featured listings:', activeListings.length);
         startTransition(() => {
           setFeaturedListings(activeListings);
+        });
+      } else {
+        console.log('ℹ️ No blockchain listings, using mock data');
+        // Если нет листингов из блокчейна, показываем моковые
+        startTransition(() => {
+          setFeaturedListings(mockListings);
         });
       }
     } catch (error) {
       console.error('Failed to load featured listings:', error);
       // Keep mock listings as fallback
+      startTransition(() => {
+        setFeaturedListings(mockListings);
+      });
+    } finally {
+      setIsLoadingListings(false);
     }
   };
 
@@ -329,9 +350,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Active Contracts Section */}
-      <ActiveContractsSection />
 
       {/* Features Section */}
       <section className="section features-section">
@@ -493,24 +511,67 @@ const HomePage: React.FC = () => {
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Популярные предложения</h2>
+            <div>
+              <h2 className="section-title">Популярные предложения</h2>
+              {isConnected && contractsLoaded && (
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                  {isLoadingListings ? '🔄 Загрузка из блокчейна...' : '✅ Данные из смарт-контрактов'}
+                </p>
+              )}
+              {!isConnected && (
+                <p style={{ color: 'var(--color-warning)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                  ⚠️ Подключите кошелек для загрузки реальных листингов
+                </p>
+              )}
+            </div>
             <Link to="/listings" className="btn btn-outline">
               Все предложения →
             </Link>
           </div>
 
-          <div className="grid grid-cols-3">
-            {featuredListings.map((listing) => (
-              <ListingCard
-                key={listing.listingId}
-                listing={listing}
-                onViewDetails={handleViewDetails}
-                onRent={handleRent}
-              />
-            ))}
-          </div>
+          {isLoadingListings ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-secondary)' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
+              <p>Загрузка листингов из блокчейна...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3">
+              {featuredListings.length > 0 ? (
+                featuredListings.map((listing) => (
+                  <ListingCard
+                    key={listing.listingId}
+                    listing={listing}
+                    onViewDetails={handleViewDetails}
+                    onRent={handleRent}
+                  />
+                ))
+              ) : (
+                <div style={{ 
+                  gridColumn: '1 / -1', 
+                  textAlign: 'center', 
+                  padding: '3rem',
+                  color: 'var(--color-text-secondary)'
+                }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📭</div>
+                  <p>Пока нет листингов</p>
+                  <button
+                    onClick={handleOpenModal}
+                    disabled={!isConnected}
+                    className="btn btn-primary"
+                    style={{ marginTop: '1rem' }}
+                  >
+                    <Plus />
+                    Создать первый листинг
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
+
+      {/* Active Contracts Section */}
+      <ActiveContractsSection />
 
       {/* Benefits Section */}
       <section className="section benefits-section">
