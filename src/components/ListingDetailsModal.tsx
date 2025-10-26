@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, FileText, Download, MapPin, DollarSign, Shield, Calendar } from 'lucide-react';
+import { X, FileText, Download, DollarSign, Shield, Calendar } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 interface ListingDetailsModalProps {
@@ -89,8 +89,8 @@ export const ListingDetailsModal: React.FC<ListingDetailsModalProps> = ({
   if (!isOpen || !listing) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '700px' }}>
+    <div className="modal-overlay" style={{ animation: 'fadeIn 0.2s ease-out' }}>
+      <div className="modal-content" style={{ maxWidth: '700px', animation: 'slideInUp 0.3s ease-out' }}>
         {/* Header */}
         <div className="modal-header">
           <h2 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>

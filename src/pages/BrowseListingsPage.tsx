@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useTransition } from 'react';
-import { Search, Filter, MapPin, DollarSign, Home } from 'lucide-react';
+import { Search, Filter, Home } from 'lucide-react';
 import { ListingCard } from '../components/ListingCard';
 import { ListingDetailsModal } from '../components/ListingDetailsModal';
 import { RentalApplicationModal } from '../components/RentalApplicationModal';

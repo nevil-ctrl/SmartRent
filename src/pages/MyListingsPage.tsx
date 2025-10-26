@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useTransition } from 'react';
-import { Plus, Home, Edit, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, Home } from 'lucide-react';
 import { ListingCard } from '../components/ListingCard';
 import { CreateListingModal } from '../components/CreateListingModal';
 import { ListingDetailsModal } from '../components/ListingDetailsModal';

@@ -27,6 +27,7 @@ import { CreateListingModal } from './components/CreateListingModal';
 import { NetworkWarning } from './components/NetworkWarning';
 import { ActiveContractsSection } from './components/ActiveContractsSection';
 import { RentalApplicationModal } from './components/RentalApplicationModal';
+import { ListingDetailsModal } from './components/ListingDetailsModal';
 import { useWeb3 } from './hooks/useWeb3';
 import { useContracts } from './hooks/useContracts';
 import { BrowseListingsPage } from './pages/BrowseListingsPage';
@@ -181,12 +182,14 @@ const Navigation: React.FC = () => {
 const HomePage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isRentalModalOpen, setIsRentalModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedListingForRent, setSelectedListingForRent] = useState<any>(null);
+  const [selectedListingForDetails, setSelectedListingForDetails] = useState<any>(null);
   const [featuredListings, setFeaturedListings] = useState<any[]>(mockListings);
   const [isLoadingListings, setIsLoadingListings] = useState(false);
   const [, startTransition] = useTransition();
   const { isConnected, account } = useWeb3();
-  const { getPlatformStatistics, getAllListings, isLoaded: contractsLoaded } = useContracts();
+  const { getPlatformStatistics, getAllListings, isLoaded:  contractsLoaded } = useContracts();
   const [stats, setStats] = useState({ 
     totalListings: 0, 
     totalRentals: 0, 
@@ -262,7 +265,11 @@ const HomePage: React.FC = () => {
   };
 
   const handleViewDetails = (listingId: number) => {
-    console.log('View details for listing:', listingId);
+    const listing = featuredListings.find(l => l.listingId === listingId);
+    if (listing) {
+      setSelectedListingForDetails(listing);
+      setIsDetailsModalOpen(true);
+    }
   };
 
   const handleRent = (listingId: number) => {
@@ -279,6 +286,11 @@ const HomePage: React.FC = () => {
     setSelectedListingForRent(null);
     // Перезагрузим статистику
     loadStats();
+  };
+
+  const handleCloseDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+    setSelectedListingForDetails(null);
   };
 
   const handleOpenModal = () => {
@@ -667,6 +679,13 @@ const HomePage: React.FC = () => {
         }}
         listing={selectedListingForRent}
         onSuccess={handleRentalSuccess}
+      />
+
+      {/* Listing Details Modal */}
+      <ListingDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={handleCloseDetailsModal}
+        listing={selectedListingForDetails}
       />
     </>
   );
