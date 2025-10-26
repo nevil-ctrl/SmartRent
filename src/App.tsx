@@ -25,6 +25,8 @@ import { WalletButton } from './components/WalletButton';
 import { ListingCard } from './components/ListingCard';
 import { CreateListingModal } from './components/CreateListingModal';
 import { NetworkWarning } from './components/NetworkWarning';
+import { ActiveContractsSection } from './components/ActiveContractsSection';
+import { RentalApplicationModal } from './components/RentalApplicationModal';
 import { useWeb3 } from './hooks/useWeb3';
 import { useContracts } from './hooks/useContracts';
 import { BrowseListingsPage } from './pages/BrowseListingsPage';
@@ -178,6 +180,8 @@ const Navigation: React.FC = () => {
 // ========== HOME PAGE ==========
 const HomePage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isRentalModalOpen, setIsRentalModalOpen] = useState(false);
+  const [selectedListingForRent, setSelectedListingForRent] = useState<any>(null);
   const [featuredListings, setFeaturedListings] = useState<any[]>(mockListings);
   const [, startTransition] = useTransition();
   const { isConnected } = useWeb3();
@@ -241,7 +245,19 @@ const HomePage: React.FC = () => {
   };
 
   const handleRent = (listingId: number) => {
-    console.log('Rent listing:', listingId);
+    const listing = featuredListings.find(l => l.listingId === listingId);
+    if (listing) {
+      setSelectedListingForRent(listing);
+      setIsRentalModalOpen(true);
+    }
+  };
+
+  const handleRentalSuccess = () => {
+    console.log('Rental application submitted successfully');
+    setIsRentalModalOpen(false);
+    setSelectedListingForRent(null);
+    // Перезагрузим статистику
+    loadStats();
   };
 
   const handleOpenModal = () => {
@@ -313,6 +329,9 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Active Contracts Section */}
+      <ActiveContractsSection />
 
       {/* Features Section */}
       <section className="section features-section">
@@ -576,6 +595,17 @@ const HomePage: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCloseModal}
         onSuccess={handleListingCreated}
+      />
+
+      {/* Rental Application Modal */}
+      <RentalApplicationModal
+        isOpen={isRentalModalOpen}
+        onClose={() => {
+          setIsRentalModalOpen(false);
+          setSelectedListingForRent(null);
+        }}
+        listing={selectedListingForRent}
+        onSuccess={handleRentalSuccess}
       />
     </>
   );

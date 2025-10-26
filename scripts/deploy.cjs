@@ -117,7 +117,11 @@ async function main() {
 
   // Verify contracts on PolygonScan (if on mainnet/testnet)
   const chainIdNumber = Number(networkInfo.chainId);
-  if (chainIdNumber === 137 || chainIdNumber === 80001) {
+  if (
+    chainIdNumber === 137 ||
+    chainIdNumber === 80001 ||
+    chainIdNumber === 80002
+  ) {
     console.log(
       "\n⏳ Waiting 30 seconds for block confirmations before verification..."
     );
@@ -168,10 +172,14 @@ async function main() {
   console.log("\n3. Start the frontend:");
   console.log("   npm run dev");
   console.log("\n4. View on Polygonscan:");
-  const scanUrl =
-    chainIdNumber === 137
-      ? `https://polygonscan.com/address/${smartRentAddress}`
-      : `https://mumbai.polygonscan.com/address/${smartRentAddress}`;
+  let scanUrl = `https://polygonscan.com/address/${smartRentAddress}`;
+  if (chainIdNumber === 80002) {
+    scanUrl = `https://amoy.polygonscan.com/address/${smartRentAddress}`;
+  } else if (chainIdNumber === 80001) {
+    scanUrl = `https://mumbai.polygonscan.com/address/${smartRentAddress}`;
+  } else if (chainIdNumber === 137) {
+    scanUrl = `https://polygonscan.com/address/${smartRentAddress}`;
+  }
   console.log(`   ${scanUrl}`);
   console.log("\n" + "=".repeat(60));
 }

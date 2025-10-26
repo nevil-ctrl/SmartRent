@@ -2,6 +2,7 @@ import React, { useState, useEffect, useTransition } from 'react';
 import { Search, Filter, MapPin, DollarSign, Home } from 'lucide-react';
 import { ListingCard } from '../components/ListingCard';
 import { ListingDetailsModal } from '../components/ListingDetailsModal';
+import { RentalApplicationModal } from '../components/RentalApplicationModal';
 import { useContracts } from '../hooks/useContracts';
 
 // Mock data for demo when contracts not loaded
@@ -75,6 +76,8 @@ export const BrowseListingsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showActiveOnly, setShowActiveOnly] = useState(true);
   const [selectedListing, setSelectedListing] = useState<any>(null);
+  const [isRentalModalOpen, setIsRentalModalOpen] = useState(false);
+  const [selectedListingForRent, setSelectedListingForRent] = useState<any>(null);
   const [, startTransition] = useTransition();
   const { getAllListings } = useContracts();
 
@@ -141,8 +144,18 @@ export const BrowseListingsPage: React.FC = () => {
   };
 
   const handleRent = (listingId: number) => {
-    console.log('Rent listing:', listingId);
-    // TODO: Open rental modal
+    const listing = listings.find(l => l.listingId === listingId);
+    if (listing) {
+      setSelectedListingForRent(listing);
+      setIsRentalModalOpen(true);
+    }
+  };
+
+  const handleRentalSuccess = () => {
+    console.log('Rental application submitted successfully');
+    setIsRentalModalOpen(false);
+    setSelectedListingForRent(null);
+    loadListings(); // Reload listings
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +176,16 @@ export const BrowseListingsPage: React.FC = () => {
         isOpen={!!selectedListing}
         onClose={() => setSelectedListing(null)}
         listing={selectedListing}
+      />
+
+      <RentalApplicationModal
+        isOpen={isRentalModalOpen}
+        onClose={() => {
+          setIsRentalModalOpen(false);
+          setSelectedListingForRent(null);
+        }}
+        listing={selectedListingForRent}
+        onSuccess={handleRentalSuccess}
       />
 
       <section className="section">

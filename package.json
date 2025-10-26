@@ -11,10 +11,12 @@
     "preview": "vite preview",
     "compile": "hardhat compile",
     "test": "hardhat test",
+    "node": "hardhat node",
     "deploy:mumbai": "hardhat run scripts/deploy.cjs --network mumbai",
     "deploy:amoy": "hardhat run scripts/deploy.cjs --network amoy",
     "deploy:polygon": "hardhat run scripts/deploy.cjs --network polygon",
-    "deploy:local": "hardhat run scripts/deploy.cjs --network hardhat"
+    "deploy:local": "hardhat run scripts/deploy.cjs --network hardhat",
+    "update-address": "node scripts/update-contract-address.cjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

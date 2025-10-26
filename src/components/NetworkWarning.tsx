@@ -43,8 +43,7 @@ export const NetworkWarning: React.FC<NetworkWarningProps> = ({ currentChainId, 
       borderRadius: 'var(--radius-lg)',
       padding: 'var(--spacing-lg)',
       boxShadow: 'var(--shadow-xl)',
-      animation: 'slideUp 0.3s ease-out',
-      position: 'relative'
+      animation: 'slideUp 0.3s ease-out'
     }}>
       {/* Close Button */}
       <button
