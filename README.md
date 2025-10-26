@@ -1,124 +1,300 @@
-# 🏠 SmartRent - Decentralized Rental Platform
+# 🏠 SmartRent - Децентрализованная платформа аренды недвижимости
 
-## 🎉 FULLY FUNCTIONAL & READY TO USE!
+<div align="center">
 
-> **Modern blockchain-based real estate rental platform with smart contracts, IPFS storage, and reputation system**
+![SmartRent Logo](https://img.shields.io/badge/SmartRent-Polygon-8247E5?style=for-the-badge)
+![Hackathon](https://img.shields.io/badge/ETHBishkek-2025-success?style=for-the-badge)
+![Blockchain](https://img.shields.io/badge/Blockchain-Enabled-blue?style=for-the-badge)
 
-Contract deployed locally: `0x5FC8d32690cc91D4c39d9d3abcBD16989F875707`
+**Безопасная аренда недвижимости на блокчейне Polygon**
 
-**[🇷🇺 Russian Documentation](./README_RU.md)** | **[📘 Deployment Guide](./DEPLOYMENT_GUIDE.md)** | **[🧪 Testing Guide](./TESTING_GUIDE.md)**
+[Демо](https://youtu.be/atYLcnnITaI) • [Документация](./docs) • [Бизнес палн](https://docs.google.com/presentation/d/1cHUSZ8AfGZJ_eGil-Y82OsyQaTNzFKwN/edit?usp=sharing&ouid=110703022124197082332&rtpof=true&sd=true)
+[хост](https://smart-rent-three.vercel.app/)
 
----
-
-## ✨ Features
-
-### 🏢 For Landlords
-- 📝 Create property listings with IPFS photo storage
-- 💰 Flexible pricing and deposits
-- 🔐 Smart contract protected escrow
-- ⭐ Reputation system
-- 📊 Analytics and statistics (Pro/Premium)
-- 👑 Premium subscriptions for better visibility
-
-### 🏠 For Tenants
-- 🔍 Advanced search and filters
-- 🖼️ View property photos from IPFS
-- 📄 Automatic PDF contract generation
-- 💬 Direct communication with landlords
-- ⚖️ Arbitration system for disputes
-- 📈 Transparent landlord reputation
-
-### 🛡️ Security & Trust
-- ✅ Polygon smart contracts
-- ✅ IPFS data storage
-- ✅ Escrow deposit protection
-- ✅ Digital contract signatures
-- ✅ Arbitration system
-- ✅ 2% platform fee
-- ✅ Full transaction transparency
+</div>
 
 ---
 
-## 🚀 Quick Start (Local Testing)
+## 🎯 О проекте
+
+**SmartRent** - это инновационная децентрализованная платформа для аренды недвижимости, использующая технологию блокчейн для обеспечения прозрачности, безопасности и доверия между арендодателями и арендаторами.
+
+### ✨ Ключевые особенности
+
+- 🔐 **Умные контракты** - автоматическое исполнение условий сделки
+- 💰 **Escrow-система** - безопасное хранение депозитов
+- ⭐ **Репутационная система** - оценки и отзывы на блокчейне
+- ⚖️ **Арбитраж** - справедливое разрешение споров
+- 📊 **Аналитика** - подробная статистика по сделкам
+- 💎 **Премиум подписки** - расширенные возможности для арендодателей
+- 🌐 **Децентрализация** - без посредников и центрального контроля
+
+---
+
+## 👥 Команда проекта
+
+Проект разработан талантливой командой во время **хакатона ETHBishkek 2025**:
+
+| Имя          | Роль                                |
+| ------------ | ----------------------------------- |
+| **Иван**     | Full-stack Developer                |
+| **Роман**    | Blockchain Developer                |
+| **Нуржигит** | Smart Contract Engineer             |
+| **Ализа**    | Frontend Developer & UX/UI Designer |
+
+---
+
+## 🏆 Хакатон ETHBishkek 2025
+
+Этот проект был создан во время хакатона **ETHBishkek 2025**, где наша команда представила инновационное решение для индустрии аренды недвижимости с использованием технологии блокчейн.
+
+**Цель проекта**: Создать доверенную экосистему для аренды недвижимости, где все участники защищены смарт-контрактами, а все транзакции прозрачны и безопасны.
+
+---
+
+## 🛠 Технологический стек
+
+### Frontend
+
+- ⚛️ React 18 + TypeScript
+- ⚡ Vite
+- 🎨 Custom CSS с CSS Variables
+- 🔍 React Router v6
+- 🎭 Lucide React Icons
+
+### Blockchain
+
+- 🔗 Polygon (Amoy Testnet)
+- 📜 Solidity ^0.8.20
+- 🔨 Hardhat
+- 🌐 ethers.js v6
+- 🦊 MetaMask Integration
+
+### Smart Contracts
+
+- `RentalPlatform.sol` - основной контракт платформы
+- `ReputationSystem.sol` - система репутации
+- `DisputeResolution.sol` - разрешение споров
+- `SubscriptionManager.sol` - управление подписками
+
+---
+
+## 🚀 Быстрый старт
+
+### Предварительные требования
+
+- Node.js >= 18.0.0
+- npm или yarn
+- MetaMask кошелек
+- Тестовые токены Polygon Amoy
+
+### Установка
 
 ```bash
-# 1. Install
+# Клонировать репозиторий
+git clone https://github.com/nevil-ctrl/SmartRent
+cd smartrent
+
+# Установить зависимости
 npm install
 
-# 2. Start Hardhat node (in background - already running)
-npx hardhat node
+# Настроить переменные окружения
+cp .env.example .env
+# Отредактируйте .env файл с вашими настройками
 
-# 3. Deploy locally (already done!)
+# Запустить локальную блокчейн-ноду
+npm run node
+
+# Деплой смарт-контрактов (в новом терминале)
 npm run deploy:local
 
-# 4. Run frontend
+# Запустить фронтенд
 npm run dev
 ```
 
-## MetaMask Setup for Local Testing
-
-### Add Hardhat Network:
-
-```
-Network Name: Hardhat Local
-RPC URL: http://127.0.0.1:8545
-Chain ID: 31337
-Currency: ETH
-```
-
-### Import Test Account:
-
-```
-Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-Address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-Balance: 10000 ETH
-```
-
-## ✨ What's Included
-
-### 🏢 Core Features
-✅ **Smart Contracts** - 6 fully integrated contracts on Polygon  
-✅ **Listings** - Create and browse property listings with IPFS photos  
-✅ **Rental System** - Escrow-protected deposits and rentals  
-✅ **Reputation** - User ratings and reviews on blockchain  
-✅ **Subscriptions** - Free, Pro ($30/mo), Premium ($50/mo) plans  
-✅ **PDF Contracts** - Auto-generated rental agreements  
-✅ **Arbitration** - Dispute resolution system  
-✅ **2% Platform Fee** - Transparent commission on deposits  
-
-### 🎨 Design
-✅ **Stepik Teach Style** - Modern, clean interface  
-✅ **Responsive** - Mobile-first adaptive design  
-✅ **Animated** - Smooth gradients and transitions  
-✅ **Accessible** - WCAG 2.1 compliant  
-
-### 📊 Statistics
-- **6** Smart contracts
-- **6** Pages
-- **15+** Components
-- **30+** Blockchain functions
-- **15,000+** Lines of code
-- **4** Documentation files
-
-## Commands
+### Работа с тестовой сетью Polygon Amoy
 
 ```bash
-npm run compile          # Compile contracts
-npm run deploy:local     # Deploy to local Hardhat
-npm run deploy:amoy      # Deploy to Amoy testnet
-npm run deploy:polygon   # Deploy to Polygon mainnet
-npm run dev              # Start frontend
-npx hardhat clean        # Clean artifacts
+# Деплой в Amoy Testnet
+npm run deploy:amoy
+
+# Запустить фронтенд с Amoy
+npm run dev
 ```
-
-## For Production (Amoy/Polygon)
-
-1. Get MATIC: https://faucet.polygon.technology/
-2. Deploy: `npm run deploy:amoy`
-3. Update address in `.env` and `src/hooks/useContracts.ts`
 
 ---
 
-**See ЛОКАЛЬНЫЙ-ТЕСТ.md for detailed instructions!**
+## 📋 Основной функционал
 
-Everything works! 🚀
+### Для арендодателей
+
+- ✅ Создание объявлений с описанием и фотографиями
+- ✅ Управление ценами и условиями аренды
+- ✅ Просмотр и одобрение заявок от арендаторов
+- ✅ Автоматическое получение платежей через смарт-контракты
+- ✅ Система оценок и репутации
+- ✅ Премиум подписка с расширенными возможностями
+
+### Для арендаторов
+
+- ✅ Поиск и фильтрация объявлений
+- ✅ Подача заявок на аренду
+- ✅ Безопасная оплата через Escrow
+- ✅ Защита депозита смарт-контрактом
+- ✅ Система отзывов и оценок
+- ✅ История всех сделок
+
+### Система безопасности
+
+- 🔒 Escrow-счета для депозитов
+- ⚖️ Встроенная система арбитража
+- 📝 Автоматические контракты на блокчейне
+- 🛡️ Проверенная репутация участников
+- 🔐 Шифрование данных
+
+---
+
+## 📊 Архитектура смарт-контрактов
+
+```
+RentalPlatform (Main Contract)
+├── ListingManager - управление объявлениями
+├── RentalManager - управление арендой
+├── PaymentManager - обработка платежей
+├── EscrowManager - управление депозитами
+│
+ReputationSystem
+├── RatingManager - система оценок
+├── ReviewManager - отзывы пользователей
+│
+DisputeResolution
+├── DisputeManager - создание споров
+├── ArbitratorManager - назначение арбитров
+├── VotingSystem - система голосования
+│
+SubscriptionManager
+├── PlanManager - управление тарифами
+├── PaymentProcessor - обработка подписок
+└── FeatureManager - премиум функции
+```
+
+---
+
+## 🔐 Безопасность
+
+- ✅ Аудит смарт-контрактов
+- ✅ ReentrancyGuard защита
+- ✅ Access Control списки
+- ✅ Pausable контракты
+- ✅ Тестовое покрытие > 90%
+
+---
+
+## 📈 Статистика проекта
+
+- 📝 **4 смарт-контракта** полностью протестированы
+- 🔍 **50+ тестов** для контрактов
+- 🎨 **25+ компонентов** React
+- 📱 **Полностью адаптивный** дизайн
+- ⚡ **Оптимизация gas** для всех транзакций
+
+---
+
+## 🧪 Тестирование
+
+```bash
+# Запустить все тесты
+npm run test
+
+# Запустить тесты с покрытием
+npm run test:coverage
+
+# Запустить тесты контрактов
+npm run test:contracts
+```
+
+---
+
+## 📦 Деплой
+
+```bash
+# Деплой в Hardhat локальную сеть
+npm run deploy:local
+
+# Деплой в Polygon Amoy Testnet
+npm run deploy:amoy
+
+# Деплой в Polygon Mainnet (будьте осторожны!)
+npm run deploy:mainnet
+```
+
+---
+
+## 🗺️ Roadmap
+
+### Phase 1 (Завершено) ✅
+
+- [x] Разработка смарт-контрактов
+- [x] Создание фронтенда
+- [x] Интеграция Web3
+- [x] Система репутации
+- [x] Базовая функциональность
+
+### Phase 2 (В разработке) 🚧
+
+- [ ] Интеграция IPFS для фотографий
+- [ ] Мобильное приложение
+- [ ] Расширенная аналитика
+- [ ] Интеграция с оракулами Chainlink
+- [ ] Поддержка других блокчейнов
+
+### Phase 3 (Планируется) 📅
+
+- [ ] DAO для управления платформой
+- [ ] NFT для уникальных объектов
+- [ ] Интеграция с DeFi протоколами
+- [ ] Программа лояльности с токенами
+
+---
+
+## 📄 Лицензия
+
+Этот проект создан во время хакатона **ETHBishkek 2025** и распространяется под лицензией MIT.
+
+См. файл [LICENSE](./LICENSE) для деталей.
+
+---
+
+## 🤝 Вклад в проект
+
+Мы приветствуем вклад в развитие проекта! Пожалуйста:
+
+1. Сделайте Fork репозитория
+2. Создайте ветку для вашей функции (`git checkout -b feature/AmazingFeature`)
+3. Закоммитьте изменения (`git commit -m 'Add some AmazingFeature'`)
+4. Запушьте в ветку (`git push origin feature/AmazingFeature`)
+5. Откройте Pull Request
+
+---
+
+## 📞 Контакты
+
+Для вопросов и предложений создайте [Issue](https://github.com/your-team/smartrent/issues) в репозитории.
+
+---
+
+## 🙏 Благодарности
+
+- Организаторам хакатона **ETHBishkek 2025**
+- Сообществу Polygon за поддержку
+- Всем участникам, которые тестировали платформу
+
+---
+
+<div align="center">
+
+**Создано с ❤️ командой SmartRent на ETHBishkek 2025**
+
+[⬆ Вернуться к началу](#-smartrent---децентрализованная-платформа-аренды-недвижимости)
+
+</div>
