@@ -1355,9 +1355,9 @@ a:focus {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  gap: var(--spacing-2xl);
-  margin-bottom: var(--spacing-2xl);
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
 }
 
 .footer-col {
@@ -1461,7 +1461,7 @@ a:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: wrap;
   gap: var(--spacing-md);
@@ -1469,22 +1469,28 @@ a:focus {
 
 .footer-copyright {
   font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.footer-badges {
+.footer-links-row {
   display: flex;
+  align-items: center;
   gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
 }
 
-.footer-badge {
-  padding: var(--spacing-xs) var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-full);
+.footer-divider {
+  color: rgba(255, 255, 255, 0.3);
   font-size: var(--font-size-xs);
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-links-row .footer-link {
+  color: rgba(255, 255, 255, 0.6);
+  transition: color var(--transition-fast);
+}
+
+.footer-links-row .footer-link:hover {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* === UTILITY CLASSES === */
@@ -1928,11 +1934,12 @@ a:focus {
   }
 
   .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
   }
 
   .footer-col:first-child {
-    grid-column: 1 / -1;
+    grid-column: 1;
   }
 
   .benefits-grid {
@@ -2068,7 +2075,19 @@ a:focus {
 
   .footer-bottom {
     flex-direction: column;
+    gap: var(--spacing-sm);
     text-align: center;
+    padding-top: var(--spacing-md);
+  }
+
+  .footer-links-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-xs);
+  }
+
+  .footer-divider {
+    display: none;
   }
 
   .steps-container {

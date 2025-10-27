@@ -76,11 +76,17 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     // Check if we're on mobile
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
-    if (typeof window === "undefined" || !window.ethereum) {
+    if (typeof window === "undefined") {
+      setState((prev) => ({ ...prev, error: "Browser environment not available" }));
+      return;
+    }
+
+    // Check for ethereum provider
+    if (!window.ethereum) {
       if (isMobile) {
         setState((prev) => ({ 
           ...prev, 
-          error: "Please open this page in MetaMask browser or install MetaMask app" 
+          error: "Please install MetaMask app or use MetaMask browser" 
         }));
       } else {
         setState((prev) => ({ ...prev, error: "MetaMask not installed" }));
@@ -91,16 +97,32 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     setState((prev) => ({ ...prev, isConnecting: true, error: null }));
 
     try {
+      // Try to connect with simpler approach for mobile
       const provider = new ethers.BrowserProvider(window.ethereum);
       
-      // For mobile, add delay to allow MetaMask to respond
-      const accounts = isMobile 
-        ? await Promise.race([
-            provider.send("eth_requestAccounts", []),
-            new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), 30000))
-          ])
-        : await provider.send("eth_requestAccounts", []);
+      // Request accounts with timeout
+      let accounts;
+      try {
+        accounts = await Promise.race([
+          provider.send("eth_requestAccounts", []),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Connection timeout. Please try again.")), 20000)
+          ) as Promise<string[]>
+        ]);
+      } catch (connectError: any) {
+        // Try direct ethereum request
+        accounts = await Promise.race([
+          window.ethereum.request({ method: "eth_requestAccounts" }),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Connection timeout")), 20000)
+          ) as Promise<string[]>
+        ]);
+      }
       
+      if (!accounts || accounts.length === 0) {
+        throw new Error("No accounts found");
+      }
+
       const signer = await provider.getSigner();
       const network = await provider.getNetwork();
 
@@ -117,7 +139,7 @@ export const useWeb3 = (): Web3State & Web3Actions => {
       setState((prev) => ({
         ...prev,
         isConnecting: false,
-        error: error.message || "Failed to connect wallet",
+        error: error.message || "Failed to connect wallet. Please try again.",
       }));
     }
   }, []);

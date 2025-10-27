@@ -788,24 +788,18 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          <div className="footer-col">
-            <h4 className="footer-heading">Правовая информация</h4>
-            <ul className="footer-links">
-              <li><a href="#" className="footer-link">Условия использования</a></li>
-              <li><a href="#" className="footer-link">Политика конфиденциальности</a></li>
-              <li><a href="#" className="footer-link">Лицензия</a></li>
-            </ul>
-          </div>
         </div>
 
         <div className="footer-bottom">
           <div className="footer-copyright">
             © 2025 SmartRent. Все права защищены. Powered by Polygon Network.
           </div>
-          <div className="footer-badges">
-            <span className="footer-badge">🔒 Secure</span>
-            <span className="footer-badge">⚡ Fast</span>
-            <span className="footer-badge">🌐 Decentralized</span>
+          <div className="footer-links-row">
+            <a href="#" className="footer-link">Условия использования</a>
+            <span className="footer-divider">•</span>
+            <a href="#" className="footer-link">Политика конфиденциальности</a>
+            <span className="footer-divider">•</span>
+            <a href="#" className="footer-link">Поддержка</a>
           </div>
         </div>
       </div>
