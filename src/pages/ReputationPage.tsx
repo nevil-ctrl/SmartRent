@@ -221,7 +221,7 @@ export const ReputationPage: React.FC = () => {
         {/* Statistics Grid */}
         <div className="grid grid-cols-3" style={{ marginBottom: 'var(--spacing-xl)' }}>
           {/* Completed Rentals */}
-          <div className="card stats-card">
+          <div className="card stats-card" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
               <div style={{
                 width: '48px',
@@ -245,7 +245,7 @@ export const ReputationPage: React.FC = () => {
           </div>
 
           {/* Cancelled Rentals */}
-          <div className="card stats-card">
+          <div className="card stats-card" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
               <div style={{
                 width: '48px',
@@ -269,7 +269,7 @@ export const ReputationPage: React.FC = () => {
           </div>
 
           {/* Disputes */}
-          <div className="card stats-card">
+          <div className="card stats-card" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
               <div style={{
                 width: '48px',

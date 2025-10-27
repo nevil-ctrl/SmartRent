@@ -66,7 +66,7 @@ export const MockContractsSection: React.FC = () => {
               key={contract.rentalId}
               className="card"
               style={{
-                backgroundColor: contract.bgColor,
+                backgroundColor: 'var(--color-bg-primary)',
                 border: 'none',
                 position: 'relative',
                 overflow: 'hidden',
@@ -78,7 +78,7 @@ export const MockContractsSection: React.FC = () => {
                   position: 'absolute',
                   top: 'var(--spacing-lg)',
                   right: 'var(--spacing-lg)',
-                  backgroundColor: 'white',
+                  backgroundColor: 'var(--color-bg-secondary)',
                   color: contract.statusColor,
                   padding: 'var(--spacing-xs) var(--spacing-md)',
                   borderRadius: 'var(--radius-full)',

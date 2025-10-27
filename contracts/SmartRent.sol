@@ -293,6 +293,14 @@ contract SmartRent is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
+     * @dev Get total number of listings
+     * @return Total count of listings
+     */
+    function getTotalListings() external view returns (uint256) {
+        return listingRegistry.getTotalListings();
+    }
+
+    /**
      * @dev Get rental details
      * @param rentalId ID of the rental
      * @return Rental struct

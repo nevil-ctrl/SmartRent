@@ -230,7 +230,7 @@ export const MyRentalsPage: React.FC = () => {
                   key={rental.rentalId}
                   className="card"
                   style={{
-                    backgroundColor: statusConfig.bg,
+                    backgroundColor: 'var(--color-bg-primary)',
                     border: 'none',
                     position: 'relative',
                   }}
@@ -241,7 +241,7 @@ export const MyRentalsPage: React.FC = () => {
                       position: 'absolute',
                       top: 'var(--spacing-lg)',
                       right: 'var(--spacing-lg)',
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--color-bg-secondary)',
                       color: statusConfig.color,
                       padding: 'var(--spacing-xs) var(--spacing-md)',
                       borderRadius: 'var(--radius-full)',
@@ -359,7 +359,7 @@ export const MyRentalsPage: React.FC = () => {
                         gap: 'var(--spacing-md)',
                         marginTop: 'var(--spacing-sm)',
                         padding: 'var(--spacing-md)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                        backgroundColor: 'var(--color-bg-secondary)',
                         borderRadius: 'var(--radius-md)',
                       }}
                     >
@@ -369,7 +369,7 @@ export const MyRentalsPage: React.FC = () => {
                         ) : (
                           <XCircle size={16} color="var(--color-text-muted)" />
                         )}
-                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-primary)' }}>
                           Арендатор
                         </span>
                       </div>
@@ -379,7 +379,7 @@ export const MyRentalsPage: React.FC = () => {
                         ) : (
                           <XCircle size={16} color="var(--color-text-muted)" />
                         )}
-                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-primary)' }}>
                           Арендодатель
                         </span>
                       </div>

@@ -365,7 +365,7 @@ export const SubscriptionPage: React.FC = () => {
                 <button
                   onClick={() => handleSubscribe(plan.id)}
                   disabled={isLoading || isCurrentPlan}
-                  className={`btn ${plan.recommended ? 'btn-primary' : 'btn-outline'}`}
+                  className="btn btn-primary"
                   style={{
                     width: '100%',
                     fontSize: 'var(--font-size-base)',

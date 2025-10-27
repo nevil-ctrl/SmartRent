@@ -16,6 +16,7 @@
     "deploy:amoy": "hardhat run scripts/deploy.cjs --network amoy",
     "deploy:polygon": "hardhat run scripts/deploy.cjs --network polygon",
     "deploy:local": "hardhat run scripts/deploy.cjs --network hardhat",
+    "create-listing": "hardhat run scripts/create-test-listing.cjs --network hardhat",
     "update-address": "node scripts/update-contract-address.cjs"
   },
   "dependencies": {

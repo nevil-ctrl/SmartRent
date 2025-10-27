@@ -21,6 +21,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { WalletButton } from './components/WalletButton';
+import { ThemeToggle } from './components/ThemeToggle';
 import { ListingCard } from './components/ListingCard';
 import { CreateListingModal } from './components/CreateListingModal';
 import { NetworkWarning } from './components/NetworkWarning';
@@ -88,7 +89,8 @@ const Header: React.FC = () => {
 
           <Navigation />
           
-          <div className="wallet-container">
+          <div className="header-actions" style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
+            <ThemeToggle />
             <WalletButton />
           </div>
         </div>
@@ -318,7 +320,7 @@ const HomePage: React.FC = () => {
     <>
       {/* Hero Section */}
       <section className="hero">
-        <div className="container">
+        <div className="container hero-card">
           <h1 className="hero-title">Зарабатывайте на сдаче<br/>недвижимости в аренду</h1>
           <p className="hero-subtitle">
             С крупнейшей децентрализованной платформой аренды на блокчейне Polygon
@@ -333,20 +335,20 @@ const HomePage: React.FC = () => {
             flexWrap: 'wrap'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
-              <CheckCircle size={18} color="#10b981" />
-              <span style={{ fontSize: 'var(--font-size-sm)', color: '#000000', fontWeight: 500 }}>
+              <CheckCircle size={18} color="white" />
+              <span style={{ fontSize: 'var(--font-size-sm)', color: 'white', fontWeight: 500 }}>
                 Умные контракты
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
-              <CheckCircle size={18} color="#10b981" />
-              <span style={{ fontSize: 'var(--font-size-sm)', color: '#000000', fontWeight: 500 }}>
+              <CheckCircle size={18} color="white" />
+              <span style={{ fontSize: 'var(--font-size-sm)', color: 'white', fontWeight: 500 }}>
                 Гарантия безопасности
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
-              <CheckCircle size={18} color="#10b981" />
-              <span style={{ fontSize: 'var(--font-size-sm)', color: '#000000', fontWeight: 500 }}>
+              <CheckCircle size={18} color="white" />
+              <span style={{ fontSize: 'var(--font-size-sm)', color: 'white', fontWeight: 500 }}>
                 Низкая комиссия 2%
               </span>
             </div>
@@ -356,12 +358,12 @@ const HomePage: React.FC = () => {
             <button
               onClick={handleOpenModal}
               disabled={!isConnected}
-              className="btn btn-outline-light btn-lg"
+              className="btn btn-primary btn-lg"
             >
               <Plus />
               Разместить объявление
             </button>
-            <Link to="/listings" className="btn btn-secondary btn-lg">
+            <Link to="/listings" className="btn btn-secondary btn-lg" style={{ backgroundColor: 'white', color: '#000' }}>
               <Search />
               Найти недвижимость
             </Link>
@@ -385,8 +387,8 @@ const HomePage: React.FC = () => {
               <div className="stats-value warning">{stats.totalDisputes}</div>
               <div className="stats-label">Споров</div>
             </div>
-            <div className="card stats-card" style={{ backgroundColor: '#f3e8ff', border: 'none' }}>
-              <div className="stats-value" style={{ color: '#9333ea' }}>{stats.totalVolume.toFixed(2)}</div>
+            <div className="card stats-card" style={{ backgroundColor: 'var(--color-primary-bg)', border: 'none' }}>
+              <div className="stats-value" style={{ color: 'var(--color-primary)' }}>{stats.totalVolume.toFixed(2)}</div>
               <div className="stats-label">Объём (MATIC)</div>
             </div>
           </div>
@@ -406,7 +408,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-3">
-            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+            <div className="feature-card">
               <div className="feature-icon" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
                 <Lock color="var(--color-primary)" />
               </div>
@@ -417,7 +419,7 @@ const HomePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+            <div className="feature-card">
               <div className="feature-icon" style={{ backgroundColor: 'var(--color-accent-bg)' }}>
                 <Users color="var(--color-accent)" />
               </div>
@@ -428,7 +430,7 @@ const HomePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+            <div className="feature-card">
               <div className="feature-icon" style={{ backgroundColor: '#f3e8ff' }}>
                 <DollarSign color="#9333ea" />
               </div>
@@ -439,7 +441,7 @@ const HomePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+            <div className="feature-card">
               <div className="feature-icon" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
                 <Shield color="var(--color-warning)" />
               </div>
@@ -450,7 +452,7 @@ const HomePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+            <div className="feature-card">
               <div className="feature-icon" style={{ backgroundColor: '#fce7f3' }}>
                 <Award color="#ec4899" />
               </div>
@@ -461,7 +463,7 @@ const HomePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="feature-card" style={{ backgroundColor: 'white' }}>
+            <div className="feature-card">
               <div className="feature-icon" style={{ backgroundColor: '#d1fae5' }}>
                 <TrendingUp color="#059669" />
               </div>
@@ -488,7 +490,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="steps-container">
-            <div className="step-card" style={{ backgroundColor: 'white' }}>
+            <div className="step-card">
               <div className="step-number">1</div>
               <div className="step-content">
                 <h3 className="step-title">Подключите кошелёк</h3>
@@ -501,7 +503,7 @@ const HomePage: React.FC = () => {
 
             <div className="step-arrow">→</div>
 
-            <div className="step-card" style={{ backgroundColor: 'white' }}>
+            <div className="step-card">
               <div className="step-number">2</div>
               <div className="step-content">
                 <h3 className="step-title">Разместите объявление</h3>
@@ -514,7 +516,7 @@ const HomePage: React.FC = () => {
 
             <div className="step-arrow">→</div>
 
-            <div className="step-card" style={{ backgroundColor: 'white' }}>
+            <div className="step-card">
               <div className="step-number">3</div>
               <div className="step-content">
                 <h3 className="step-title">Получайте отклики</h3>
@@ -527,7 +529,7 @@ const HomePage: React.FC = () => {
 
             <div className="step-arrow">→</div>
 
-            <div className="step-card" style={{ backgroundColor: 'white' }}>
+            <div className="step-card">
               <div className="step-number">4</div>
               <div className="step-content">
                 <h3 className="step-title">Заключите сделку</h3>

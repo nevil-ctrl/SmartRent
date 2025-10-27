@@ -207,7 +207,6 @@ contract Reputation is AccessControl, ReentrancyGuard, Pausable {
         require(block.timestamp <= reviews[reviewId].createdAt + 7 days, "Cannot update review after 7 days");
 
         address reviewee = reviews[reviewId].reviewee;
-        uint256 oldRating = reviews[reviewId].rating;
 
         reviews[reviewId].rating = newRating;
         reviews[reviewId].review = newReview;

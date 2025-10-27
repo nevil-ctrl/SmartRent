@@ -75,11 +75,11 @@ export const CONTRACT_ADDRESSES = {
   },
   80002: {
     // Polygon Amoy testnet (новый Mumbai)
-    SmartRent: DEFAULT_SMARTRENT_ADDRESS,
+    SmartRent: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
   },
   80001: {
     // Mumbai testnet (DEPRECATED - используй Amoy)
-    SmartRent: DEFAULT_SMARTRENT_ADDRESS,
+    SmartRent: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
   },
   137: {
     // Polygon Mainnet
