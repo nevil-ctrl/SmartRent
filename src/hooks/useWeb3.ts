@@ -73,8 +73,18 @@ export const useWeb3 = (): Web3State & Web3Actions => {
   };
 
   const connect = useCallback(async () => {
+    // Check if we're on mobile
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
     if (typeof window === "undefined" || !window.ethereum) {
-      setState((prev) => ({ ...prev, error: "MetaMask not installed" }));
+      if (isMobile) {
+        setState((prev) => ({ 
+          ...prev, 
+          error: "Please open this page in MetaMask browser or install MetaMask app" 
+        }));
+      } else {
+        setState((prev) => ({ ...prev, error: "MetaMask not installed" }));
+      }
       return;
     }
 
@@ -82,7 +92,15 @@ export const useWeb3 = (): Web3State & Web3Actions => {
 
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
+      
+      // For mobile, add delay to allow MetaMask to respond
+      const accounts = isMobile 
+        ? await Promise.race([
+            provider.send("eth_requestAccounts", []),
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), 30000))
+          ])
+        : await provider.send("eth_requestAccounts", []);
+      
       const signer = await provider.getSigner();
       const network = await provider.getNetwork();
 
