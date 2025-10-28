@@ -18,7 +18,10 @@ import {
   Award,
   Clock,
   DollarSign,
-  Smartphone
+  Smartphone,
+  ExternalLink,
+  BookOpen,
+  Wallet
 } from 'lucide-react';
 import { WalletButton } from './components/WalletButton';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -106,12 +109,33 @@ const Navigation: React.FC = () => {
   const [, startTransition] = useTransition();
 
   const navItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/listings', label: 'Browse', icon: Search },
-    { path: '/my-listings', label: 'My Listings', icon: User },
-    { path: '/rentals', label: 'My Rentals', icon: FileText },
-    { path: '/subscription', label: 'Subscription', icon: Zap },
-    { path: '/reputation', label: 'Reputation', icon: Star },
+    { path: '/', label: 'Главная', icon: Home },
+    { path: '/listings', label: 'Объявления', icon: Search },
+    { path: '/my-listings', label: 'Мои объявления', icon: User },
+    { path: '/rentals', label: 'Мои аренды', icon: FileText },
+    { path: '/subscription', label: 'Подписка', icon: Zap },
+    { path: '/reputation', label: 'Репутация', icon: Star },
+  ];
+
+  const externalLinks = [
+    { 
+      href: 'https://polygonscan.com', 
+      label: 'Polygon Explorer', 
+      icon: ExternalLink,
+      description: 'Просмотр транзакций'
+    },
+    { 
+      href: 'https://docs.polygon.technology', 
+      label: 'Документация Polygon', 
+      icon: BookOpen,
+      description: 'Официальная документация'
+    },
+    { 
+      href: 'https://metamask.io', 
+      label: 'MetaMask', 
+      icon: Wallet,
+      description: 'Кошелек для подключения'
+    },
   ];
 
   const handleMenuToggle = () => {
@@ -124,6 +148,11 @@ const Navigation: React.FC = () => {
     startTransition(() => {
       setIsMobileMenuOpen(false);
     });
+  };
+
+  const handleExternalLink = (href: string) => {
+    window.open(href, '_blank', 'noopener,noreferrer');
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -158,26 +187,89 @@ const Navigation: React.FC = () => {
       {/* Mobile Navigation Dropdown */}
       {isMobileMenuOpen && (
         <div className="mobile-menu open">
-          <nav className="nav-menu">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={handleLinkClick}
-                  className={`nav-link ${isActive ? 'active' : ''}`}
-                >
-                  <Icon />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="mobile-menu-content">
+            {/* Main Navigation */}
+            <div className="mobile-menu-section">
+              <nav className="nav-menu">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={handleLinkClick}
+                      className={`nav-link ${isActive ? 'active' : ''}`}
+                    >
+                      <Icon />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* External Links */}
+            <div className="mobile-menu-section">
+              <h3 className="mobile-menu-title">Полезные ссылки</h3>
+              <div className="mobile-external-links">
+                {externalLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <button
+                      key={link.href}
+                      onClick={() => handleExternalLink(link.href)}
+                      className="mobile-external-link"
+                    >
+                      <Icon />
+                      <div className="mobile-external-link-content">
+                        <span className="mobile-external-link-label">{link.label}</span>
+                        <span className="mobile-external-link-description">{link.description}</span>
+                      </div>
+                      <ExternalLink size={16} />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>
+  );
+};
+
+// ========== BOTTOM NAVIGATION COMPONENT ==========
+const BottomNavigation: React.FC = () => {
+  const location = useLocation();
+
+  const bottomNavItems = [
+    { path: '/', label: 'Главная', icon: Home },
+    { path: '/listings', label: 'Поиск', icon: Search },
+    { path: '/my-listings', label: 'Мои', icon: User },
+    { path: '/rentals', label: 'Аренда', icon: FileText },
+    { path: '/subscription', label: 'Про', icon: Zap },
+  ];
+
+  return (
+    <nav className="bottom-navigation">
+      {bottomNavItems.map((item) => {
+        const Icon = item.icon;
+        const isActive = location.pathname === item.path;
+        return (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`bottom-nav-item ${isActive ? 'active' : ''}`}
+          >
+            <div className="bottom-nav-icon">
+              <Icon />
+            </div>
+            <span className="bottom-nav-label">{item.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
   );
 };
 
@@ -835,6 +927,7 @@ const App: React.FC = () => {
         </Routes>
       </main>
       <Footer />
+      <BottomNavigation />
     </Router>
   );
 };
