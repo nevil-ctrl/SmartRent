@@ -81,8 +81,46 @@ const mockListings = [
 
 // ========== HEADER COMPONENT ==========
 const Header: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    // Инициализируем состояние на основе размера экрана
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    // Проверяем, мобильное ли устройство
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    const handleResize = () => {
+      checkMobile();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      const isMobileDevice = window.innerWidth <= 768;
+      // Для мобилки порог меньше - более быстрая реакция
+      const threshold = isMobileDevice ? 20 : 30;
+      setIsScrolled(scrollPosition > threshold);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Проверяем начальную позицию
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <header className="app-header">
+    <header className={`app-header ${isScrolled ? 'scrolled' : ''} ${isMobile ? 'mobile' : ''}`}>
       <div className="container">
         <div className="header-container">
           <Link to="/" className="nav-brand">
@@ -107,6 +145,19 @@ const Navigation: React.FC = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [, startTransition] = useTransition();
+
+  // Блокируем скролл body когда меню открыто на мобилке
+  useEffect(() => {
+    if (isMobileMenuOpen && window.innerWidth <= 768) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const navItems = [
     { path: '/', label: 'Главная', icon: Home },
@@ -186,50 +237,73 @@ const Navigation: React.FC = () => {
 
       {/* Mobile Navigation Dropdown */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu open">
-          <div className="mobile-menu-content">
-            {/* Main Navigation */}
-            <div className="mobile-menu-section">
-              <nav className="nav-menu">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      onClick={handleLinkClick}
-                      className={`nav-link ${isActive ? 'active' : ''}`}
-                    >
-                      <Icon />
-                      <span>{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
+        <div className="mobile-menu open" onClick={(e) => {
+          // Закрываем меню при клике на overlay
+          if (e.target === e.currentTarget) {
+            handleMenuToggle();
+          }
+        }}>
+          <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="mobile-menu-header">
+              <div className="mobile-menu-brand">
+                <div className="logo-mark">SR</div>
+                <span>SmartRent</span>
+              </div>
+              <button
+                onClick={handleMenuToggle}
+                className="mobile-menu-close"
+                aria-label="Close menu"
+              >
+                <X />
+              </button>
             </div>
 
-            {/* External Links */}
-            <div className="mobile-menu-section">
-              <h3 className="mobile-menu-title">Полезные ссылки</h3>
-              <div className="mobile-external-links">
-                {externalLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <button
-                      key={link.href}
-                      onClick={() => handleExternalLink(link.href)}
-                      className="mobile-external-link"
-                    >
-                      <Icon />
-                      <div className="mobile-external-link-content">
-                        <span className="mobile-external-link-label">{link.label}</span>
-                        <span className="mobile-external-link-description">{link.description}</span>
-                      </div>
-                      <ExternalLink size={16} />
-                    </button>
-                  );
-                })}
+            {/* Body */}
+            <div className="mobile-menu-body">
+              {/* Main Navigation */}
+              <div className="mobile-menu-section">
+                <nav className="nav-menu">
+                  {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path;
+                    return (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        onClick={handleLinkClick}
+                        className={`nav-link ${isActive ? 'active' : ''}`}
+                      >
+                        <Icon />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* External Links */}
+              <div className="mobile-menu-section">
+                <h3 className="mobile-menu-title">Полезные ссылки</h3>
+                <div className="mobile-external-links">
+                  {externalLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <button
+                        key={link.href}
+                        onClick={() => handleExternalLink(link.href)}
+                        className="mobile-external-link"
+                      >
+                        <Icon />
+                        <div className="mobile-external-link-content">
+                          <span className="mobile-external-link-label">{link.label}</span>
+                          <span className="mobile-external-link-description">{link.description}</span>
+                        </div>
+                        <ExternalLink size={16} />
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -244,11 +318,11 @@ const BottomNavigation: React.FC = () => {
   const location = useLocation();
 
   const bottomNavItems = [
-    { path: '/', label: 'Главная', icon: Home },
-    { path: '/listings', label: 'Поиск', icon: Search },
-    { path: '/my-listings', label: 'Мои', icon: User },
-    { path: '/rentals', label: 'Аренда', icon: FileText },
-    { path: '/subscription', label: 'Про', icon: Zap },
+    { path: '/', icon: Home },
+    { path: '/listings', icon: Search },
+    { path: '/my-listings', icon: User },
+    { path: '/rentals', icon: FileText },
+    { path: '/subscription', icon: Zap },
   ];
 
   return (
@@ -265,7 +339,6 @@ const BottomNavigation: React.FC = () => {
             <div className="bottom-nav-icon">
               <Icon />
             </div>
-            <span className="bottom-nav-label">{item.label}</span>
           </Link>
         );
       })}
