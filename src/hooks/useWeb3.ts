@@ -77,19 +77,25 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
     if (typeof window === "undefined") {
-      setState((prev) => ({ ...prev, error: "Browser environment not available" }));
+      setState((prev) => ({ ...prev, error: "Браузер недоступен" }));
       return;
     }
 
-    // Check for ethereum provider
+    // Check for ethereum provider - improved mobile detection
     if (!window.ethereum) {
       if (isMobile) {
         setState((prev) => ({ 
           ...prev, 
-          error: "Please install MetaMask app or use MetaMask browser" 
+          error: "Установите MetaMask или откройте в браузере MetaMask" 
         }));
+        // Try to redirect to MetaMask download on mobile
+        setTimeout(() => {
+          if (confirm("MetaMask не найден. Открыть страницу загрузки?")) {
+            window.open("https://metamask.io/download/", "_blank");
+          }
+        }, 100);
       } else {
-        setState((prev) => ({ ...prev, error: "MetaMask not installed" }));
+        setState((prev) => ({ ...prev, error: "MetaMask не установлен" }));
       }
       return;
     }
@@ -97,30 +103,45 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     setState((prev) => ({ ...prev, isConnecting: true, error: null }));
 
     try {
-      // Try to connect with simpler approach for mobile
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      // For mobile, use direct window.ethereum.request for better compatibility
+      let accounts: string[] = [];
+      let provider: ethers.BrowserProvider;
       
-      // Request accounts with timeout
-      let accounts;
-      try {
-        accounts = await Promise.race([
-          provider.send("eth_requestAccounts", []),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error("Connection timeout. Please try again.")), 20000)
-          ) as Promise<string[]>
-        ]);
-      } catch (connectError: any) {
-        // Try direct ethereum request
-        accounts = await Promise.race([
-          window.ethereum.request({ method: "eth_requestAccounts" }),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error("Connection timeout")), 20000)
-          ) as Promise<string[]>
-        ]);
+      if (isMobile) {
+        // Mobile-specific connection flow
+        try {
+          // First, try direct ethereum request (works better on mobile MetaMask)
+          accounts = await window.ethereum.request({ 
+            method: "eth_requestAccounts" 
+          }) as string[];
+          
+          if (!accounts || accounts.length === 0) {
+            throw new Error("Аккаунты не найдены. Разблокируйте MetaMask.");
+          }
+          
+          // Create provider after accounts are available
+          provider = new ethers.BrowserProvider(window.ethereum);
+        } catch (mobileError: any) {
+          // If direct request fails, try through provider
+          provider = new ethers.BrowserProvider(window.ethereum);
+          
+          try {
+            accounts = await provider.send("eth_requestAccounts", []) as string[];
+          } catch (providerError: any) {
+            if (mobileError.code === 4001) {
+              throw new Error("Подключение отклонено пользователем");
+            }
+            throw mobileError;
+          }
+        }
+      } else {
+        // Desktop flow
+        provider = new ethers.BrowserProvider(window.ethereum);
+        accounts = await provider.send("eth_requestAccounts", []) as string[];
       }
       
       if (!accounts || accounts.length === 0) {
-        throw new Error("No accounts found");
+        throw new Error("Не найдено активных аккаунтов");
       }
 
       const signer = await provider.getSigner();
@@ -136,10 +157,22 @@ export const useWeb3 = (): Web3State & Web3Actions => {
         error: null,
       });
     } catch (error: any) {
+      console.error("Wallet connection error:", error);
+      
+      let errorMessage = "Не удалось подключить кошелёк. Попробуйте снова.";
+      
+      if (error.code === 4001) {
+        errorMessage = "Подключение отклонено";
+      } else if (error.code === -32002) {
+        errorMessage = "Запрос уже обрабатывается. Проверьте MetaMask.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setState((prev) => ({
         ...prev,
         isConnecting: false,
-        error: error.message || "Failed to connect wallet. Please try again.",
+        error: errorMessage,
       }));
     }
   }, []);

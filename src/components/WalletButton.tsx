@@ -75,14 +75,22 @@ export const WalletButton: React.FC = () => {
 
   // Not connected state
   if (!isConnected) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
     return (
       <button
         onClick={connect}
         disabled={isConnecting}
-        className="btn btn-primary"
+        className={`btn btn-primary ${isMobile ? 'wallet-mobile-btn' : ''}`}
+        style={isMobile ? {
+          padding: '10px 16px',
+          fontSize: '14px',
+          minWidth: 'auto',
+          whiteSpace: 'nowrap'
+        } : {}}
       >
-        <Wallet />
-        <span>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
+        <Wallet size={isMobile ? 18 : 20} />
+        <span>{isConnecting ? 'Подключение...' : isMobile ? 'Подключить' : 'Connect Wallet'}</span>
       </button>
     );
   }
