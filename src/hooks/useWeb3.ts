@@ -73,72 +73,28 @@ export const useWeb3 = (): Web3State & Web3Actions => {
   };
 
   const connect = useCallback(async () => {
-    // Check if we're on mobile
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
     if (typeof window === "undefined") {
       setState((prev) => ({ ...prev, error: "Браузер недоступен" }));
       return;
     }
 
-    // Check for ethereum provider - improved mobile detection
+    // Проверка наличия кошелька
     if (!window.ethereum) {
-      if (isMobile) {
-        setState((prev) => ({ 
-          ...prev, 
-          error: "Установите MetaMask или откройте в браузере MetaMask" 
-        }));
-        // Try to redirect to MetaMask download on mobile
-        setTimeout(() => {
-          if (confirm("MetaMask не найден. Открыть страницу загрузки?")) {
-            window.open("https://metamask.io/download/", "_blank");
-          }
-        }, 100);
-      } else {
-        setState((prev) => ({ ...prev, error: "MetaMask не установлен" }));
-      }
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const errorMsg = isMobile 
+        ? "Откройте сайт в браузере MetaMask или установите кошелек"
+        : "Установите MetaMask";
+      
+      setState((prev) => ({ ...prev, error: errorMsg }));
       return;
     }
 
     setState((prev) => ({ ...prev, isConnecting: true, error: null }));
 
     try {
-      // For mobile, use direct window.ethereum.request for better compatibility
-      let accounts: string[] = [];
-      let provider: ethers.BrowserProvider;
-      
-      if (isMobile) {
-        // Mobile-specific connection flow
-        try {
-          // First, try direct ethereum request (works better on mobile MetaMask)
-          accounts = await window.ethereum.request({ 
-            method: "eth_requestAccounts" 
-          }) as string[];
-          
-          if (!accounts || accounts.length === 0) {
-            throw new Error("Аккаунты не найдены. Разблокируйте MetaMask.");
-          }
-          
-          // Create provider after accounts are available
-          provider = new ethers.BrowserProvider(window.ethereum);
-        } catch {
-          // If direct request fails, try through provider
-          provider = new ethers.BrowserProvider(window.ethereum);
-          
-          try {
-            accounts = await provider.send("eth_requestAccounts", []) as string[];
-          } catch (providerError: any) {
-            if (providerError.code === 4001) {
-              throw new Error("Подключение отклонено пользователем");
-            }
-            throw providerError;
-          }
-        }
-      } else {
-        // Desktop flow
-        provider = new ethers.BrowserProvider(window.ethereum);
-        accounts = await provider.send("eth_requestAccounts", []) as string[];
-      }
+      // Простое подключение - работает одинаково на всех устройствах
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []) as string[];
       
       if (!accounts || accounts.length === 0) {
         throw new Error("Не найдено активных аккаунтов");
@@ -159,12 +115,15 @@ export const useWeb3 = (): Web3State & Web3Actions => {
     } catch (error: any) {
       console.error("Wallet connection error:", error);
       
-      let errorMessage = "Не удалось подключить кошелёк. Попробуйте снова.";
+      // Упрощенные сообщения об ошибках
+      let errorMessage = "Не удалось подключить кошелёк";
       
       if (error.code === 4001) {
         errorMessage = "Подключение отклонено";
       } else if (error.code === -32002) {
-        errorMessage = "Запрос уже обрабатывается. Проверьте MetaMask.";
+        errorMessage = "Проверьте MetaMask";
+      } else if (error.message?.includes("отклонено")) {
+        errorMessage = "Подключение отклонено";
       } else if (error.message) {
         errorMessage = error.message;
       }

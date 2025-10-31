@@ -81,16 +81,17 @@ export const WalletButton: React.FC = () => {
       <button
         onClick={connect}
         disabled={isConnecting}
-        className={`btn btn-primary ${isMobile ? 'wallet-mobile-btn' : ''}`}
-        style={isMobile ? {
-          padding: '10px 16px',
-          fontSize: '14px',
+        className="btn btn-primary wallet-connect-btn"
+        style={{
+          padding: isMobile ? '10px 16px' : 'var(--spacing-sm) var(--spacing-md)',
+          fontSize: isMobile ? '14px' : 'var(--font-size-sm)',
           minWidth: 'auto',
-          whiteSpace: 'nowrap'
-        } : {}}
+          whiteSpace: 'nowrap',
+          gap: '8px'
+        }}
       >
         <Wallet size={isMobile ? 18 : 20} />
-        <span>{isConnecting ? 'Подключение...' : isMobile ? 'Подключить' : 'Connect Wallet'}</span>
+        <span>{isConnecting ? 'Подключение...' : 'Подключить'}</span>
       </button>
     );
   }
