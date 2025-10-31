@@ -121,17 +121,17 @@ export const useWeb3 = (): Web3State & Web3Actions => {
           
           // Create provider after accounts are available
           provider = new ethers.BrowserProvider(window.ethereum);
-        } catch (mobileError: any) {
+        } catch {
           // If direct request fails, try through provider
           provider = new ethers.BrowserProvider(window.ethereum);
           
           try {
             accounts = await provider.send("eth_requestAccounts", []) as string[];
           } catch (providerError: any) {
-            if (mobileError.code === 4001) {
+            if (providerError.code === 4001) {
               throw new Error("Подключение отклонено пользователем");
             }
-            throw mobileError;
+            throw providerError;
           }
         }
       } else {

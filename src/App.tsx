@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect, useTransition, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import {
   Home,
@@ -18,10 +18,7 @@ import {
   Award,
   Clock,
   DollarSign,
-  Smartphone,
-  ExternalLink,
-  BookOpen,
-  Wallet
+  Smartphone
 } from 'lucide-react';
 import { WalletButton } from './components/WalletButton';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -39,8 +36,22 @@ import { MyRentalsPage } from './pages/MyRentalsPage';
 import { ReputationPage } from './pages/ReputationPage';
 import { SubscriptionPage } from './pages/SubscriptionPage';
 
+// Types
+interface Listing {
+  listingId: number;
+  landlord: string;
+  title: string;
+  description: string;
+  pricePerDay: string;
+  deposit: string;
+  isActive: boolean;
+  ipfsHash: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
 // Mock data for demonstration
-const mockListings = [
+const mockListings: Listing[] = [
   {
     listingId: 1,
     landlord: '0x1234567890123456789012345678901234567890',
@@ -258,9 +269,9 @@ const HomePage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isRentalModalOpen, setIsRentalModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedListingForRent, setSelectedListingForRent] = useState<any>(null);
-  const [selectedListingForDetails, setSelectedListingForDetails] = useState<any>(null);
-  const [featuredListings, setFeaturedListings] = useState<any[]>(mockListings);
+  const [selectedListingForRent, setSelectedListingForRent] = useState<Listing | null>(null);
+  const [selectedListingForDetails, setSelectedListingForDetails] = useState<Listing | null>(null);
+  const [featuredListings, setFeaturedListings] = useState<Listing[]>(mockListings);
   const [isLoadingListings, setIsLoadingListings] = useState(false);
   const [, startTransition] = useTransition();
   const { isConnected, account } = useWeb3();
@@ -272,16 +283,7 @@ const HomePage: React.FC = () => {
     totalVolume: 0 
   });
 
-  // Загружаем статистику и листинги при подключении
-  useEffect(() => {
-    if (contractsLoaded && isConnected) {
-      console.log('🔄 Contracts loaded, fetching data...');
-      loadStats();
-      loadFeaturedListings();
-    }
-  }, [contractsLoaded, isConnected, account]);
-
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       const statistics = await getPlatformStatistics();
       startTransition(() => {
@@ -304,9 +306,9 @@ const HomePage: React.FC = () => {
         });
       });
     }
-  };
+  }, [getPlatformStatistics, startTransition]);
 
-  const loadFeaturedListings = async () => {
+  const loadFeaturedListings = useCallback(async () => {
     console.log('📋 Loading featured listings from blockchain...');
     setIsLoadingListings(true);
     try {
@@ -337,7 +339,16 @@ const HomePage: React.FC = () => {
     } finally {
       setIsLoadingListings(false);
     }
-  };
+  }, [getAllListings, startTransition]);
+
+  // Загружаем статистику и листинги при подключении
+  useEffect(() => {
+    if (contractsLoaded && isConnected) {
+      console.log('🔄 Contracts loaded, fetching data...');
+      loadStats();
+      loadFeaturedListings();
+    }
+  }, [contractsLoaded, isConnected, account, loadStats, loadFeaturedListings]);
 
   const handleViewDetails = (listingId: number) => {
     const listing = featuredListings.find(l => l.listingId === listingId);

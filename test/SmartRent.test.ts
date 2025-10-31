@@ -176,8 +176,8 @@ describe("SmartRent Platform", function () {
       await smartRent.connect(landlord).signContract(0, contractHash);
 
       const rental = await smartRent.getRental(0);
-      expect(rental.tenantSigned).to.be.true;
-      expect(rental.landlordSigned).to.be.true;
+      void expect(rental.tenantSigned).to.be.true;
+      void expect(rental.landlordSigned).to.be.true;
     });
   });
 
@@ -235,7 +235,7 @@ describe("SmartRent Platform", function () {
 
       // Check if user has premium features
       const hasFeature = await smartRent.hasPremiumFeature(landlord.address, 1);
-      expect(hasFeature).to.be.true;
+      void expect(hasFeature).to.be.true;
     });
   });
 
@@ -318,7 +318,7 @@ describe("SmartRent Platform", function () {
         "QmTestHash"
       );
 
-      let [totalListings, totalRentals, totalDisputes, totalVolume] = 
+      const [totalListings, totalRentals, , totalVolume] = 
         await smartRent.getPlatformStatistics();
       expect(totalListings).to.equal(1);
 
@@ -332,7 +332,7 @@ describe("SmartRent Platform", function () {
         Math.floor(Date.now() / 1000) + 86400 + 2592000
       );
 
-      [totalListings, totalRentals, totalDisputes, totalVolume] = 
+      [totalListings, totalRentals, , totalVolume] = 
         await smartRent.getPlatformStatistics();
       expect(totalListings).to.equal(1);
       expect(totalRentals).to.equal(1);
