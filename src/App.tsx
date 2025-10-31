@@ -40,6 +40,7 @@ import { MyListingsPage } from './pages/MyListingsPage';
 import { MyRentalsPage } from './pages/MyRentalsPage';
 import { ReputationPage } from './pages/ReputationPage';
 import { SubscriptionPage } from './pages/SubscriptionPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 // Types
 interface Listing {
@@ -168,6 +169,7 @@ const Navigation: React.FC = () => {
     { path: '/rentals', label: 'Мои аренды', icon: FileText },
     { path: '/subscription', label: 'Подписка', icon: Zap },
     { path: '/reputation', label: 'Репутация', icon: Star },
+    { path: '/settings', label: 'Настройки', icon: Settings },
   ];
 
   // Закрываем меню при изменении маршрута
@@ -311,14 +313,14 @@ const Navigation: React.FC = () => {
                 <span>Помощь</span>
               </a>
 
-              <a
-                href="#"
+              <Link
+                to="/settings"
                 className="mobile-menu-link"
                 onClick={closeMenu}
               >
                 <Settings size={20} />
                 <span>Настройки</span>
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -1020,6 +1022,7 @@ const App: React.FC = () => {
           <Route path="/rentals" element={<MyRentalsPage />} />
           <Route path="/subscription" element={<SubscriptionPage />} />
           <Route path="/reputation" element={<ReputationPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </main>
       <Footer />
