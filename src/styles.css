@@ -2226,9 +2226,23 @@ a:focus {
     display: none;
   }
 
-  /* Показываем гамбургер на мобильных */
+  /* Показываем гамбургер на мобильных и перемещаем в правый угол */
+  .header-container {
+    position: relative;
+  }
+
   .hamburger-btn {
     display: flex !important;
+    position: absolute !important;
+    right: var(--spacing-md) !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 100 !important;
+  }
+
+  /* Убираем правый padding у header-actions на мобильных, чтобы гамбургер был справа */
+  .header-actions {
+    margin-right: 56px !important; /* Отступ для гамбургера */
   }
 
   .hero {

@@ -210,7 +210,7 @@ const Navigation: React.FC = () => {
         })}
       </nav>
 
-      {/* Hamburger Button - только на мобильных */}
+      {/* Hamburger Button - только на мобильных, будет перемещен в правый угол через CSS */}
       <button
         className="hamburger-btn"
         onClick={toggleMenu}
