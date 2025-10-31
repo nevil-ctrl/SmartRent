@@ -143,21 +143,7 @@ const Header: React.FC = () => {
 // ========== NAVIGATION COMPONENT ==========
 const Navigation: React.FC = () => {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [, startTransition] = useTransition();
-
-  // Блокируем скролл body когда меню открыто на мобилке
-  useEffect(() => {
-    if (isMobileMenuOpen && window.innerWidth <= 768) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMobileMenuOpen]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { path: '/', label: 'Главная', icon: Home },
@@ -168,48 +154,35 @@ const Navigation: React.FC = () => {
     { path: '/reputation', label: 'Репутация', icon: Star },
   ];
 
-  const externalLinks = [
-    { 
-      href: 'https://polygonscan.com', 
-      label: 'Polygon Explorer', 
-      icon: ExternalLink,
-      description: 'Просмотр транзакций'
-    },
-    { 
-      href: 'https://docs.polygon.technology', 
-      label: 'Документация Polygon', 
-      icon: BookOpen,
-      description: 'Официальная документация'
-    },
-    { 
-      href: 'https://metamask.io', 
-      label: 'MetaMask', 
-      icon: Wallet,
-      description: 'Кошелек для подключения'
-    },
-  ];
+  // Закрываем меню при изменении маршрута
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
-  const handleMenuToggle = () => {
-    startTransition(() => {
-      setIsMobileMenuOpen(!isMobileMenuOpen);
-    });
+  // Блокируем скролл body когда меню открыто
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLinkClick = () => {
-    startTransition(() => {
-      setIsMobileMenuOpen(false);
-    });
-  };
-
-  const handleExternalLink = (href: string) => {
-    window.open(href, '_blank', 'noopener,noreferrer');
-    setIsMobileMenuOpen(false);
+  const closeMenu = () => {
+    setIsMenuOpen(false);
   };
 
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="nav-menu">
+      <nav className="nav-menu desktop-nav">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -226,123 +199,57 @@ const Navigation: React.FC = () => {
         })}
       </nav>
 
-      {/* Mobile Menu Toggle */}
+      {/* Hamburger Button - только на мобильных */}
       <button
-        onClick={handleMenuToggle}
-        className="mobile-menu-toggle"
+        className="hamburger-btn"
+        onClick={toggleMenu}
         aria-label="Toggle menu"
+        aria-expanded={isMenuOpen}
       >
-        {isMobileMenuOpen ? <X /> : <Menu />}
+        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Mobile Navigation Dropdown */}
-      {isMobileMenuOpen && (
-        <div className="mobile-menu open" onClick={(e) => {
-          // Закрываем меню при клике на overlay
-          if (e.target === e.currentTarget) {
-            handleMenuToggle();
-          }
-        }}>
-          <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
-            {/* Header */}
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMenu}>
+          <div className="mobile-menu-sidebar" onClick={(e) => e.stopPropagation()}>
+            {/* Menu Header */}
             <div className="mobile-menu-header">
-              <div className="mobile-menu-brand">
+              <div className="mobile-menu-logo">
                 <div className="logo-mark">SR</div>
                 <span>SmartRent</span>
               </div>
               <button
-                onClick={handleMenuToggle}
-                className="mobile-menu-close"
+                className="mobile-menu-close-btn"
+                onClick={closeMenu}
                 aria-label="Close menu"
               >
-                <X />
+                <X size={20} />
               </button>
             </div>
 
-            {/* Body */}
-            <div className="mobile-menu-body">
-              {/* Main Navigation */}
-              <div className="mobile-menu-section">
-                <nav className="nav-menu">
-                  {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location.pathname === item.path;
-                    return (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        onClick={handleLinkClick}
-                        className={`nav-link ${isActive ? 'active' : ''}`}
-                      >
-                        <Icon />
-                        <span>{item.label}</span>
-                      </Link>
-                    );
-                  })}
-                </nav>
-              </div>
-
-              {/* External Links */}
-              <div className="mobile-menu-section">
-                <h3 className="mobile-menu-title">Полезные ссылки</h3>
-                <div className="mobile-external-links">
-                  {externalLinks.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <button
-                        key={link.href}
-                        onClick={() => handleExternalLink(link.href)}
-                        className="mobile-external-link"
-                      >
-                        <Icon />
-                        <div className="mobile-external-link-content">
-                          <span className="mobile-external-link-label">{link.label}</span>
-                          <span className="mobile-external-link-description">{link.description}</span>
-                        </div>
-                        <ExternalLink size={16} />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            {/* Menu Navigation */}
+            <nav className="mobile-menu-nav">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`mobile-menu-link ${isActive ? 'active' : ''}`}
+                    onClick={closeMenu}
+                  >
+                    <Icon size={20} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
         </div>
       )}
     </>
-  );
-};
-
-// ========== BOTTOM NAVIGATION COMPONENT ==========
-const BottomNavigation: React.FC = () => {
-  const location = useLocation();
-
-  const bottomNavItems = [
-    { path: '/', icon: Home },
-    { path: '/listings', icon: Search },
-    { path: '/my-listings', icon: User },
-    { path: '/rentals', icon: FileText },
-    { path: '/subscription', icon: Zap },
-  ];
-
-  return (
-    <nav className="bottom-navigation">
-      {bottomNavItems.map((item) => {
-        const Icon = item.icon;
-        const isActive = location.pathname === item.path;
-        return (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`bottom-nav-item ${isActive ? 'active' : ''}`}
-          >
-            <div className="bottom-nav-icon">
-              <Icon />
-            </div>
-          </Link>
-        );
-      })}
-    </nav>
   );
 };
 
@@ -1000,7 +907,6 @@ const App: React.FC = () => {
         </Routes>
       </main>
       <Footer />
-      <BottomNavigation />
     </Router>
   );
 };

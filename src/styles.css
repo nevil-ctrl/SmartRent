@@ -389,355 +389,185 @@ a:focus {
   height: 18px;
 }
 
-/* Mobile Menu Toggle */
-.mobile-menu-toggle {
+/* ========== HAMBURGER MENU - NEW ========== */
+
+/* Кнопка гамбургера - скрыта на десктопе, видна на мобильных */
+.hamburger-btn {
   display: none;
-  padding: var(--spacing-sm);
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+  background: var(--color-bg-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 10px;
+  color: var(--color-primary);
   cursor: pointer;
-  color: var(--color-text-primary);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-base);
-  position: relative;
-  z-index: 1001;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.mobile-menu-toggle:hover {
-  background-color: var(--color-bg-primary);
-  color: var(--color-primary);
+.hamburger-btn:hover {
+  background: var(--color-primary);
+  color: white;
   transform: scale(1.05);
 }
 
-.mobile-menu-toggle svg {
-  width: 24px;
-  height: 24px;
+.hamburger-btn:active {
+  transform: scale(0.95);
 }
 
-.mobile-menu-toggle:focus {
+.hamburger-btn:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Mobile Menu Dropdown - Новый дизайн снизу вверх */
-.mobile-menu {
-  display: none;
+/* Overlay для мобильного меню */
+.mobile-menu-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 999;
-  animation: fadeIn 0.2s ease-out;
-  overflow: hidden;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+  backdrop-filter: blur(2px);
 }
 
-.mobile-menu.open {
-  display: block;
-}
-
-.mobile-menu-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: 85vh;
-  background: var(--color-bg-primary);
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  animation: slideUpFromBottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-@keyframes slideUpFromBottom {
+@keyframes fadeIn {
   from {
-    transform: translateY(100%);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
     opacity: 1;
   }
 }
 
-.mobile-menu-header {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Боковое меню */
+.mobile-menu-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  max-width: 85vw;
+  height: 100vh;
   background: var(--color-bg-primary);
-  position: relative;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 10000;
+  animation: slideInRight 0.3s ease;
+  overflow-y: auto;
 }
 
-/* Индикатор для "потянуть, чтобы закрыть" */
-.mobile-menu-header::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 4px;
-  background: var(--color-border);
-  border-radius: 2px;
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
-.mobile-menu-brand {
+/* Хедер меню */
+.mobile-menu-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.mobile-menu-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-weight: 700;
   font-size: 18px;
   color: var(--color-text-primary);
 }
 
-.mobile-menu-brand .logo-mark {
-  width: 32px;
-  height: 32px;
-  font-size: 12px;
+.mobile-menu-logo .logo-mark {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
 }
 
-.mobile-menu-close {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+.mobile-menu-close-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: var(--color-bg-secondary);
+  border: none;
+  border-radius: 8px;
+  color: var(--color-text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.mobile-menu-close:hover {
+.mobile-menu-close-btn:hover {
   background: var(--color-primary);
   color: white;
-  transform: rotate(90deg) scale(1.1);
+  transform: scale(1.1);
 }
 
-.mobile-menu-close:active {
-  transform: rotate(90deg) scale(0.95);
+.mobile-menu-close-btn:active {
+  transform: scale(0.95);
 }
 
-.mobile-menu-close svg {
-  width: 20px;
-  height: 20px;
-}
-
-.mobile-menu-body {
-  padding: 8px 16px 24px;
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Кастомный скроллбар для мобильного меню */
-.mobile-menu-body::-webkit-scrollbar {
-  width: 4px;
-}
-
-.mobile-menu-body::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
-
-.mobile-menu-section {
-  margin-bottom: 24px;
-}
-
-.mobile-menu-section:last-child {
-  margin-bottom: 0;
-}
-
-.mobile-menu-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding-left: 4px;
-}
-
-
-.mobile-menu .nav-menu {
+/* Навигация в меню */
+.mobile-menu-nav {
+  display: flex;
   flex-direction: column;
-  align-items: stretch;
+  padding: 16px;
   gap: 8px;
 }
 
-.mobile-menu .nav-link {
-  justify-content: flex-start;
-  padding: 18px 20px;
-  background: transparent;
-  border: none;
-  border-radius: 14px;
-  transition: all 0.2s ease;
-  margin-bottom: 6px;
-  position: relative;
-  overflow: visible;
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--color-text-primary);
-  box-shadow: none;
-}
-
-.mobile-menu .nav-link::before {
-  display: none;
-}
-
-.mobile-menu .nav-link:hover {
-  background: var(--color-bg-secondary);
-  transform: scale(1.02);
-  padding-left: 22px;
-}
-
-.mobile-menu .nav-link.active {
-  background: var(--color-primary-bg);
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.mobile-menu .nav-link.active::after {
-  content: '';
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  background: var(--color-primary);
-  border-radius: 50%;
-}
-
-.mobile-menu .nav-link.active svg {
-  color: var(--color-primary);
-}
-
-.mobile-menu .nav-link svg {
-  width: 24px;
-  height: 24px;
-  margin-right: 16px;
-  transition: all 0.2s ease;
-  color: var(--color-text-secondary);
-  flex-shrink: 0;
-}
-
-.mobile-menu .nav-link:hover svg {
-  color: var(--color-primary);
-}
-
-.mobile-menu .nav-link.active svg {
-  color: var(--color-primary);
-}
-
-.mobile-external-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.mobile-external-link {
+.mobile-menu-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: var(--color-bg-secondary);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-  width: 100%;
-  position: relative;
-  overflow: visible;
-  margin-bottom: 8px;
-}
-
-.mobile-external-link:hover {
-  background: var(--color-primary-bg);
-  transform: scale(1.02);
-}
-
-.mobile-external-link:active {
-  transform: translateY(0);
-}
-
-.mobile-external-link svg:first-child {
-  color: var(--color-primary);
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  transition: transform 0.2s ease;
-}
-
-.mobile-external-link:hover svg:first-child {
-  transform: scale(1.15) rotate(5deg);
-}
-
-.mobile-external-link svg:last-child {
-  color: var(--color-text-muted);
-  margin-left: auto;
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  transition: transform 0.2s ease;
-}
-
-.mobile-external-link:hover svg:last-child {
-  transform: translateX(4px);
-  color: var(--color-primary);
-}
-
-.mobile-external-link-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-}
-
-.mobile-external-link-label {
-  font-weight: 600;
+  gap: 16px;
+  padding: 16px 20px;
   color: var(--color-text-primary);
-  font-size: 14px;
-  line-height: 1.3;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  background: transparent;
 }
 
-.mobile-external-link-description {
-  font-size: 12px;
+.mobile-menu-link:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.mobile-menu-link.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.mobile-menu-link svg {
+  flex-shrink: 0;
   color: var(--color-text-secondary);
-  line-height: 1.4;
+  transition: color 0.2s ease;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Закрытие мобильного меню при клике на overlay */
-.mobile-menu::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
+.mobile-menu-link:hover svg,
+.mobile-menu-link.active svg {
+  color: var(--color-primary);
 }
 
 /* === MAIN CONTENT === */
@@ -2396,17 +2226,9 @@ a:focus {
     display: none;
   }
 
-  .mobile-menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    order: 2;
-    margin-left: var(--spacing-sm);
-  }
-
-  .header-actions {
-    order: 1;
-    gap: var(--spacing-xs);
+  /* Показываем гамбургер на мобильных */
+  .hamburger-btn {
+    display: flex !important;
   }
 
   .hero {
@@ -2558,8 +2380,7 @@ a:focus {
     gap: var(--spacing-xxs);
   }
 
-  .theme-toggle,
-  .mobile-menu-toggle {
+  .theme-toggle {
     width: 36px;
     height: 36px;
   }
