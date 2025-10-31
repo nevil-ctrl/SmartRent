@@ -18,7 +18,12 @@ import {
   Award,
   Clock,
   DollarSign,
-  Smartphone
+  Smartphone,
+  BookOpen,
+  HelpCircle,
+  ExternalLink,
+  Settings,
+  Info
 } from 'lucide-react';
 import { WalletButton } from './components/WalletButton';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -256,6 +261,64 @@ const Navigation: React.FC = () => {
                   </Link>
                 );
               })}
+
+              {/* Divider */}
+              <div className="mobile-menu-divider" />
+
+              {/* Additional Links */}
+              <a
+                href="#"
+                className="mobile-menu-link"
+                onClick={closeMenu}
+              >
+                <BookOpen size={20} />
+                <span>Документация</span>
+                <ExternalLink size={16} className="external-icon" />
+              </a>
+
+              <a
+                href="https://polygonscan.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-menu-link"
+                onClick={closeMenu}
+              >
+                <ExternalLink size={20} />
+                <span>Polygon Explorer</span>
+                <ExternalLink size={16} className="external-icon" />
+              </a>
+
+              <a
+                href="https://docs.polygon.technology"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-menu-link"
+                onClick={closeMenu}
+              >
+                <Info size={20} />
+                <span>Polygon Docs</span>
+                <ExternalLink size={16} className="external-icon" />
+              </a>
+
+              <div className="mobile-menu-divider" />
+
+              <a
+                href="#"
+                className="mobile-menu-link"
+                onClick={closeMenu}
+              >
+                <HelpCircle size={20} />
+                <span>Помощь</span>
+              </a>
+
+              <a
+                href="#"
+                className="mobile-menu-link"
+                onClick={closeMenu}
+              >
+                <Settings size={20} />
+                <span>Настройки</span>
+              </a>
             </nav>
           </div>
         </div>
@@ -441,14 +504,14 @@ const HomePage: React.FC = () => {
             <button
               onClick={handleOpenModal}
               disabled={!isConnected}
-              className="btn btn-primary btn-lg"
+              className="btn btn-primary"
             >
-              <Plus />
-              Разместить объявление
+              <Plus size={22} />
+              <span>Разместить объявление</span>
             </button>
-            <Link to="/listings" className="btn btn-secondary btn-lg" style={{ backgroundColor: 'white', color: '#000' }}>
-              <Search />
-              Найти недвижимость
+            <Link to="/listings" className="btn btn-secondary">
+              <Search size={22} />
+              <span>Найти недвижимость</span>
             </Link>
           </div>
         </div>
