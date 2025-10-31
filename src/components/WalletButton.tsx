@@ -64,11 +64,14 @@ export const WalletButton: React.FC = () => {
 
   // Error state
   if (error) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     return (
-      <div className="wallet-error">
-        <AlertCircle style={{ width: '20px', height: '20px' }} />
+      <div className="wallet-error" title={error}>
+        <AlertCircle style={{ width: isMobile ? '14px' : '16px', height: isMobile ? '14px' : '16px', flexShrink: 0 }} />
         <span>{error}</span>
-        <button onClick={connect}>Retry</button>
+        {!isMobile && (
+          <button onClick={connect} aria-label="Retry connection">Retry</button>
+        )}
       </div>
     );
   }

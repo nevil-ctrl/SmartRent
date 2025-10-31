@@ -66,7 +66,8 @@ export const ListingCard: React.FC<ListingCardProps> = ({
         ) : null}
         {!isLoading && !imageUrl && (
           <div className="listing-image-placeholder">
-            <Eye style={{ width: '48px', height: '48px' }} />
+            <Eye size={48} />
+            <span>Нет изображения</span>
           </div>
         )}
 

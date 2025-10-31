@@ -255,6 +255,16 @@ a:focus {
   border-radius: var(--radius-sm);
 }
 
+/* Убираем обводку для ссылок в футере */
+.app-footer a:focus,
+.app-footer a:active,
+.app-footer .footer-link:focus,
+.app-footer .footer-link:active {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 /* === КОНТЕЙНЕР === */
 .container {
   width: 100%;
@@ -1129,41 +1139,144 @@ a:focus {
   font-weight: 500;
 }
 
-/* === PROPERTY LISTING CARD (Stepik Teach Style - скругленные карточки) === */
+/* === PROPERTY LISTING CARD (Улучшенный дизайн) === */
 .listing-card {
   background-color: var(--color-bg-primary);
-  border: none;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .listing-card:hover {
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .listing-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .listing-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border-color: var(--color-primary);
 }
 
 .listing-image {
   position: relative;
   width: 100%;
-  height: 200px;
-  background-color: var(--color-bg-tertiary);
+  height: 240px;
+  background: linear-gradient(135deg, 
+    var(--color-bg-tertiary) 0%, 
+    var(--color-primary-bg) 30%,
+    var(--color-bg-secondary) 60%,
+    var(--color-bg-tertiary) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  border-bottom: 3px solid var(--color-border);
+}
+
+/* Паттерн диагональных линий для плейсхолдера */
+.listing-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0, 0, 0, 0.03) 10px,
+      rgba(0, 0, 0, 0.03) 20px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="dark"] .listing-image::before {
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.05) 10px,
+      rgba(255, 255, 255, 0.05) 20px
+    );
+}
+
+/* Дополнительный градиент для глубины */
+.listing-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="dark"] .listing-image::after {
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
 }
 
 .listing-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: relative;
+  z-index: 1;
 }
 
 .listing-image-placeholder {
-  color: var(--color-text-muted);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--color-border);
+}
+
+[data-theme="dark"] .listing-image-placeholder {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.listing-image-placeholder svg {
+  opacity: 0.6;
+  color: var(--color-primary);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.listing-image-placeholder span {
+  font-weight: 500;
+  color: var(--color-text-secondary);
 }
 
 .listing-badge {
@@ -1352,12 +1465,25 @@ a:focus {
 .wallet-error {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: 6px;
+  padding: 6px 10px;
   background-color: #fee2e2;
   color: var(--color-danger);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
+  border-radius: 8px;
+  font-size: 11px;
+  max-width: 200px;
+  flex-shrink: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wallet-error span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .wallet-error button {
@@ -1366,7 +1492,11 @@ a:focus {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--font-size-sm);
+  font-size: 11px;
+  padding: 0;
+  margin-left: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Wallet dropdown menu */
@@ -1485,167 +1615,245 @@ a:focus {
 
 /* === FOOTER (Stepik Teach Style - светлее) === */
 .app-footer {
-  background: #1f2937;
-  color: rgba(255, 255, 255, 0.85);
-  padding: var(--spacing-3xl) 0 var(--spacing-lg);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-2xl) 0 var(--spacing-md);
   margin-top: auto;
-  position: relative;
-  overflow: hidden;
+  border-top: 1px solid var(--color-border);
 }
 
-.app-footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(88, 86, 214, 0.3),
-    transparent
-  );
+/* Мобильный футер - упрощенный (скрыт на десктопе) */
+.footer-mobile {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  text-align: center;
+  padding: var(--spacing-lg) 0;
+}
+
+.footer-logo-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.footer-logo-mobile .logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: var(--font-size-xs);
+}
+
+.footer-mobile-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-xs) 0;
+}
+
+.footer-link-mobile {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.footer-link-mobile:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.footer-link-mobile:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.footer-copyright-mobile {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: var(--spacing-xl);
-  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
 .footer-col {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .footer-brand-section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .footer-logo {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .footer-logo .logo-mark {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-light),
-    var(--color-primary)
-  );
+  width: 36px;
+  height: 36px;
+  background: var(--color-primary);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
 }
 
 .footer-brand-description {
-  font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
   margin: 0;
 }
 
 .footer-social {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
 }
 
 .social-link {
-  width: 40px;
-  height: 40px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md);
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-secondary);
   transition: all var(--transition-fast);
 }
 
 .social-link:hover {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
   transform: translateY(-2px);
   text-decoration: none;
 }
 
 .footer-heading {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: white;
-  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+  margin-top: 0;
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .footer-link {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
+  font-size: var(--font-size-xs);
+  transition: color var(--transition-fast);
   display: inline-block;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .footer-link:hover {
-  color: white;
+  color: var(--color-primary);
   text-decoration: none;
-  transform: translateX(4px);
+}
+
+.footer-link:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.footer-link:active {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .footer-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
   flex-wrap: wrap;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .footer-copyright {
-  font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
 }
 
 .footer-links-row {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  font-size: var(--font-size-sm);
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
 }
 
 .footer-divider {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-muted);
   font-size: var(--font-size-xs);
 }
 
 .footer-links-row .footer-link {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   transition: color var(--transition-fast);
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .footer-links-row .footer-link:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-primary);
+}
+
+.footer-links-row .footer-link:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* === BOTTOM NAVIGATION === */
@@ -1789,19 +1997,39 @@ a:focus {
 
 /* === FEATURES SECTION (Stepik Style - цветные карточки) === */
 .features-section {
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-secondary);
 }
 
 .feature-card {
   background-color: var(--color-bg-primary);
-  border: none;
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: calc(var(--spacing-xl) + 0.5rem);
   text-align: left;
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Улучшенные тени для темной темы */
+[data-theme="dark"] .feature-card {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.4);
+  background-color: var(--color-bg-primary);
+}
+
+/* Улучшенные тени для светлой темы */
+[data-theme="light"] .feature-card {
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .feature-card::before {
@@ -1814,10 +2042,19 @@ a:focus {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgba(79, 70, 229, 0.1),
     transparent
   );
   transition: left 0.5s;
+}
+
+[data-theme="dark"] .feature-card::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
 }
 
 .feature-card:hover::before {
@@ -1826,7 +2063,23 @@ a:focus {
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 
+    0 8px 24px rgba(79, 70, 229, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .feature-card:hover {
+  box-shadow: 
+    0 8px 24px rgba(79, 70, 229, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-primary);
+}
+
+[data-theme="light"] .feature-card:hover {
+  box-shadow: 
+    0 8px 24px rgba(79, 70, 229, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
@@ -1839,7 +2092,13 @@ a:focus {
   margin: 0 0 var(--spacing-lg) 0;
   position: relative;
   z-index: 1;
-  box-shadow: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .feature-icon {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .feature-icon svg {
@@ -1847,37 +2106,72 @@ a:focus {
   height: 28px;
   position: relative;
   z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
-/* Пастельные фоны как у Stepik Teach */
+[data-theme="dark"] .feature-icon svg {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+}
+
+/* Пастельные фоны для иконок с улучшенной видимостью */
 .gradient-blue {
-  background: var(--color-primary-bg);
-  box-shadow: none;
+  background: var(--color-primary-bg) !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25) !important;
+}
+
+[data-theme="dark"] .gradient-blue {
+  background: rgba(79, 70, 229, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4) !important;
 }
 
 .gradient-green {
-  background: var(--color-accent-bg);
-  box-shadow: none;
+  background: var(--color-accent-bg) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme="dark"] .gradient-green {
+  background: rgba(16, 185, 129, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4) !important;
 }
 
 .gradient-purple {
-  background: #f3e8ff;
-  box-shadow: none;
+  background: #f3e8ff !important;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.25) !important;
+}
+
+[data-theme="dark"] .gradient-purple {
+  background: rgba(147, 51, 234, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4) !important;
 }
 
 .gradient-orange {
-  background: var(--color-warning-bg);
-  box-shadow: none;
+  background: var(--color-warning-bg) !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="dark"] .gradient-orange {
+  background: rgba(245, 158, 11, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4) !important;
 }
 
 .gradient-pink {
-  background: #fce7f3;
-  box-shadow: none;
+  background: #fce7f3 !important;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25) !important;
+}
+
+[data-theme="dark"] .gradient-pink {
+  background: rgba(236, 72, 153, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4) !important;
 }
 
 .gradient-teal {
-  background: #d1fae5;
-  box-shadow: none;
+  background: #d1fae5 !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25) !important;
+}
+
+[data-theme="dark"] .gradient-teal {
+  background: rgba(5, 150, 105, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4) !important;
 }
 
 .feature-title {
@@ -1888,11 +2182,29 @@ a:focus {
   line-height: 1.3;
 }
 
+/* Улучшенная контрастность для заголовков */
+[data-theme="dark"] .feature-title {
+  color: #ffffff;
+}
+
+[data-theme="light"] .feature-title {
+  color: #1f2937;
+}
+
 .feature-description {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
+}
+
+/* Улучшенная контрастность для описаний */
+[data-theme="dark"] .feature-description {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="light"] .feature-description {
+  color: #4b5563;
 }
 
 /* === HOW IT WORKS SECTION === */
@@ -2229,21 +2541,36 @@ a:focus {
   /* Показываем гамбургер на мобильных и перемещаем в правый угол */
   .header-container {
     position: relative;
+    padding-right: 56px !important; /* Отступ справа для гамбургера (44px кнопка + 12px отступ) */
   }
 
   .hamburger-btn {
     display: flex !important;
     position: absolute !important;
-    right: var(--spacing-md) !important;
+    right: var(--spacing-sm) !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     z-index: 100 !important;
   }
 
-  /* Убираем правый padding у header-actions на мобильных, чтобы гамбургер был справа */
+  /* Убираем правый padding у header-actions на мобильных */
   .header-actions {
-    margin-right: 56px !important; /* Отступ для гамбургера */
+    margin-right: 0 !important;
+    gap: var(--spacing-xs) !important;
+    flex-shrink: 1 !important;
+    max-width: calc(100% - 60px) !important; /* Ограничиваем ширину чтобы не перекрывать гамбургер */
   }
+
+  /* На мобильных делаем кнопку подключения компактнее */
+  .wallet-connect-btn {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    min-width: auto !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Скрываем ThemeToggle только на очень маленьких экранах */
+  /* На обычных мобильных (768px) оставляем видимым */
 
   .hero {
     padding: var(--spacing-2xl) 0;
@@ -2326,21 +2653,28 @@ a:focus {
     justify-content: center;
   }
 
+  /* Скрываем десктопный футер на мобильных */
+  .footer-grid,
   .footer-bottom {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    text-align: center;
-    padding-top: var(--spacing-md);
+    display: none !important;
   }
 
-  .footer-links-row {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-xs);
+  /* Показываем только мобильный футер */
+  .footer-mobile {
+    display: flex !important;
   }
 
-  .footer-divider {
-    display: none;
+  .app-footer {
+    padding: var(--spacing-lg) 0 var(--spacing-md) !important;
+  }
+
+  .footer-mobile {
+    gap: var(--spacing-sm) !important;
+    padding: var(--spacing-md) 0 !important;
+  }
+
+  .footer-mobile-links {
+    gap: var(--spacing-sm) !important;
   }
 
   /* Bottom Navigation - Mobile Only */
@@ -2392,11 +2726,31 @@ a:focus {
 
   .header-actions {
     gap: var(--spacing-xxs);
+    margin-right: 0 !important;
   }
 
-  .theme-toggle {
-    width: 36px;
-    height: 36px;
+  /* ThemeToggle скрыт только на экранах 480px и меньше для экономии места */
+
+  .header-container {
+    padding-right: 56px !important; /* Отступ для гамбургера */
+  }
+
+  /* Компактная ошибка на маленьких экранах */
+  .wallet-error {
+    max-width: 140px !important;
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+    gap: 4px !important;
+  }
+
+  .wallet-error svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .wallet-error button {
+    font-size: 10px !important;
+    display: none; /* Скрываем кнопку Retry на маленьких экранах */
   }
 
   .wallet-account {
@@ -2455,29 +2809,48 @@ a:focus {
   }
 
   .feature-icon {
-    width: 50px;
-    height: 50px;
+    width: 48px !important;
+    height: 48px !important;
   }
 
   .feature-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 24px !important;
+    height: 24px !important;
   }
 
   .footer-badges {
     justify-content: center;
   }
 
+  .features-section {
+    padding: var(--spacing-xl) 0 !important;
+  }
+
   .feature-card {
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg) !important;
+    border: 2px solid var(--color-border) !important;
+    margin-bottom: var(--spacing-md);
   }
 
   .feature-card h3 {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-base) !important;
+    margin-bottom: var(--spacing-xs) !important;
   }
 
   .feature-card p {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm) !important;
+    line-height: 1.5 !important;
+  }
+
+  .feature-icon {
+    width: 48px !important;
+    height: 48px !important;
+    margin-bottom: var(--spacing-md) !important;
+  }
+
+  .feature-icon svg {
+    width: 24px !important;
+    height: 24px !important;
   }
 }
 
